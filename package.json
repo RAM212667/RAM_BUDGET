@@ -1,0 +1,10 @@
+﻿{
+  "name": "budget-tool",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Budget tool with backend persistence",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
