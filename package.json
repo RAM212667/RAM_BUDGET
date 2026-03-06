@@ -1,10 +1,11 @@
-﻿{
+{
   "name": "budget-tool",
   "version": "1.0.0",
   "private": true,
   "description": "Budget tool with backend persistence",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:4000": "set PORT=4000&& set HOST=127.0.0.1&& node server.js"
   }
 }

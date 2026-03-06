@@ -1,8 +1,11 @@
-﻿const http = require("http");
+const http = require("http");
 const fs = require("fs");
 const path = require("path");
 
-const PORT = Number(process.env.PORT || 3000);
+const PORT = Number(process.env.PORT || 4000);
+const HOST = process.env.HOST || "127.0.0.1";
+const STARTED_AT = new Date().toISOString();
+
 const ROOT = __dirname;
 const DATA_DIR = path.join(ROOT, "data");
 const STORAGE_PATH = path.join(DATA_DIR, "storage.json");
@@ -122,7 +125,13 @@ const server = http.createServer(async (req, res) => {
   const url = req.url || "/";
 
   if (url === "/api/health" && method === "GET") {
-    sendJson(res, 200, { ok: true });
+    sendJson(res, 200, {
+      ok: true,
+      host: HOST,
+      port: PORT,
+      startedAt: STARTED_AT,
+      uptimeSeconds: Math.floor(process.uptime())
+    });
     return;
   }
 
@@ -184,6 +193,25 @@ const server = http.createServer(async (req, res) => {
 });
 
 ensureStorageFile();
-server.listen(PORT, () => {
-  console.log(`Budget Tool server running at http://127.0.0.1:${PORT}`);
+
+server.on("error", err => {
+  if (err && err.code === "EADDRINUSE") {
+    console.error(`Port ${PORT} is already in use. Stop the other app or start with another port.`);
+    process.exit(1);
+  }
+  console.error("Server failed to start:", err);
+  process.exit(1);
+});
+
+process.on("uncaughtException", err => {
+  console.error("Uncaught exception:", err);
+});
+
+process.on("unhandledRejection", err => {
+  console.error("Unhandled rejection:", err);
+});
+
+server.listen(PORT, HOST, () => {
+  console.log(`Money Command Center server running at http://${HOST}:${PORT}`);
+  console.log(`Storage file: ${STORAGE_PATH}`);
 });
