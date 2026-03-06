@@ -1,0 +1,1754 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAM LOGISTICS SOLUTIONS | Personal Money Command Center</title>
+  <style>
+    :root {
+      --bg: #f5f4ef;
+      --panel: #fffdf8;
+      --ink: #202124;
+      --accent: #0b6e4f;
+      --accent-soft: #dff4eb;
+      --danger: #b42318;
+      --border: #d9d3c7;
+      --muted: #6a6f75;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 20% 10%, #e7f3ec 0%, transparent 40%),
+        radial-gradient(circle at 90% 90%, #f2ead8 0%, transparent 35%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+    }
+    .brand-kicker {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid #b9d9cb;
+      background: #eef9f3;
+      color: #0f5f46;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .model-pill {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #dfcfaf;
+      background: #fff4e2;
+      color: #755019;
+      font-size: 0.74rem;
+      font-weight: 700;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .personal-note {
+      border: 1px dashed #cebfa2;
+      background: #fff9ef;
+    }
+
+    .personal-note h2 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      color: #5f4218;
+    }
+
+    .page-nav {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .page-link {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      color: #1c5e48;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      width: auto;
+    }
+
+    .page-link-danger {
+      margin-left: auto;
+      color: #8d1f1b;
+      border-color: #e2b3af;
+      background: #fff5f5;
+    }
+    .reset-control {
+      margin-top: 8px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+
+    .reset-confirm {
+      margin-top: 6px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .reset-confirm.hidden {
+      display: none;
+    }
+
+    .reset-confirm label {
+      font-size: 0.88rem;
+      color: #6b4a45;
+      font-weight: 600;
+    }
+
+    .reset-confirm input {
+      max-width: 170px;
+      width: auto;
+    }
+
+    .reset-confirm button {
+      width: auto;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .reset-confirm button[data-reset-confirm-btn] {
+      color: #8d1f1b;
+      border-color: #e2b3af;
+    }
+
+    .reset-confirm button[data-reset-confirm-btn]:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .toast-success {
+      margin-top: 12px;
+      border: 1px solid #b6e4cf;
+      border-left: 5px solid #1e7a59;
+      background: #f2fbf6;
+      color: #1f4f40;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .toast-success.hidden {
+      display: none;
+    }
+
+    .row {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      align-items: end;
+    }
+
+    .row-pay,
+    .row-expense-main {
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    }
+
+    .row-expense-secondary {
+      grid-template-columns: minmax(280px, 2fr) minmax(180px, 1fr) minmax(180px, 1fr);
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .hidden { display: none; }
+
+    label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      font: inherit;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      background: #fff;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover { opacity: 0.92; }
+    button:active { transform: translateY(1px); }
+
+    .button-secondary {
+      background: #eef2f1;
+      color: #1f4f40;
+      border: 1px solid #cbd6d2;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .card {
+      background: var(--accent-soft);
+      border: 1px solid #c9e9db;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 0.88rem;
+      color: #185543;
+    }
+
+    .card p {
+      margin: 8px 0 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .checks-breakdown-panel {
+      margin-top: 10px;
+      border: 1px solid #c9e9db;
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #f8fffb;
+    }
+
+    .checks-breakdown-panel h3 {
+      margin: 0;
+      font-size: 0.92rem;
+      color: #185543;
+    }
+
+    .checks-breakdown-grid {
+      margin-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .checks-breakdown-card {
+      background: var(--accent-soft);
+      border: 1px solid #c9e9db;
+      border-radius: 12px;
+      padding: 10px;
+      min-width: 170px;
+      flex: 1 1 170px;
+    }
+
+    .checks-breakdown-card h4 {
+      margin: 0;
+      font-size: 0.85rem;
+      color: #185543;
+      font-weight: 700;
+    }
+
+    .checks-breakdown-card p {
+      margin: 6px 0 0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .checks-breakdown-operator {
+      min-width: 42px;
+      flex: 0 0 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #c9e9db;
+      border-radius: 12px;
+      background: #ffffff;
+      color: #185543;
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .budget-block {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-top: 16px;
+      background: #fff;
+    }
+
+    .block-income {
+      border-left: 6px solid #1e7a59;
+      background: #f2fbf6;
+    }
+
+    .block-expense {
+      border-left: 6px solid #b45f06;
+      background: #fff9ef;
+    }
+
+    .block-banking {
+      border-left: 6px solid #1c5e9a;
+      background: #eef6ff;
+    }
+
+    .block-title {
+      margin: 0 0 4px;
+      font-size: 1.1rem;
+    }
+
+    .block-subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+    .saved-people,
+    .income-list {
+      margin-top: 12px;
+    }
+
+    .table-block {
+      margin-top: 10px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .table-block h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #174f3c;
+    }
+
+    .table-block table {
+      margin-top: 8px;
+    }
+
+    .table-block th,
+    .table-block td {
+      padding: 8px 6px;
+      font-size: 0.9rem;
+    }
+
+    .table-block .empty {
+      margin: 8px 0 2px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .amount { font-weight: 700; }
+
+    .actions button {
+      background: #fff;
+      color: var(--danger);
+      border: 1px solid #f1c0be;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+    }
+
+    .empty {
+      color: var(--muted);
+      margin-top: 12px;
+    }
+    .goal-budget-panel {
+      margin-top: 12px;
+      border: 1px solid #c7e9d9;
+      border-left: 5px solid #1e7a59;
+      border-radius: 12px;
+      padding: 10px 12px;
+      background: #f4fcf7;
+    }
+
+    .goal-budget-panel h3 {
+      margin: 0;
+      font-size: 0.95rem;
+      color: #185543;
+    }
+
+    .goal-budget-panel .sub {
+      margin-top: 4px;
+      font-size: 0.88rem;
+    }.goal-budget-row {
+      margin-top: 10px;
+      display: grid;
+      gap: 10px;
+      grid-template-columns: minmax(220px, 320px) minmax(170px, 220px) 1fr;
+      align-items: end;
+    }
+
+    .goal-budget-row button {
+      width: auto;
+      padding: 9px 12px;
+      border-radius: 10px;
+      border: none;
+      background: #1f7a59;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .goal-budget-status {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #2d5e50;
+    }
+
+
+    @media (max-width: 960px) {
+      .summary { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 760px) {
+      body { padding: 14px; }
+      .row,
+      .row-pay,
+      .row-expense-main,
+      .row-expense-secondary {
+        grid-template-columns: 1fr;
+      }
+      .summary { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="storage-sync.js"></script>
+  <script src="reset-control.js"></script>
+  <script src="month-year-picker.js"></script>
+  <script src="nav-active.js"></script>
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+            <div class="brand-kicker">Powered by RAM LOGISTICS SOLUTIONS</div>
+      <h1>Money Command Center <span class="model-pill">Personal Model</span></h1>
+      <p class="sub">Add income and expenses by month, then track totals.</p>
+      <div class="page-nav">
+        <a class="page-link" href="index.html">Money Command Center</a>
+        <a class="page-link" href="hourly-tracker.html">Hourly Income Tracker</a>
+        <a class="page-link" href="banking-overview.html">Banking Overview</a>
+        <a class="page-link" href="goals-budget.html">Goals Planner</a>
+        <a class="page-link" href="charts-dashboard.html">Money Map Charts</a>
+        <button class="page-link page-link-danger" type="button" data-reset-all>Reset All Data</button>
+      </div>
+      <div class="reset-control" data-reset-control>
+        <div class="reset-confirm hidden" data-reset-confirm-wrap>
+          <label>Type <strong>RESET</strong> to confirm:</label>
+          <input type="text" data-reset-input placeholder="RESET" autocomplete="off">
+          <button type="button" data-reset-confirm-btn disabled>Confirm Reset</button>
+          <button type="button" data-reset-cancel-btn>Cancel</button>
+        </div>
+      </div>
+      <div id="reset-success" class="toast-success hidden">All data has been cleared successfully.</div>
+
+      <div class="controls" style="margin-top:12px; max-width:280px;">
+        <div class="field">
+          <label for="filter-month">Track Month</label>
+          <input id="filter-month" type="month">
+        </div>
+      </div>
+      <section class="budget-block block-income">
+        <h2 class="block-title">Income Setup</h2>
+        <p class="block-subtitle">Save people, add income sources, set pay dates, and track checks remaining.</p>
+        <form id="pay-form">
+          <div class="row row-pay">
+            <div class="field">
+              <label for="pay-month">Pay Month</label>
+              <input id="pay-month" name="pay-month" type="month" required>
+            </div>
+            <div class="field">
+              <label for="pay-person-select">Person</label>
+              <select id="pay-person-select" name="pay-person-select" required></select>
+            </div>
+            <div class="field hidden" id="pay-person-new-field">
+              <label for="pay-person-new">New Person Name</label>
+              <input id="pay-person-new" name="pay-person-new" type="text" placeholder="Ex: Alex">
+            </div>
+            <div class="field">
+              <label for="pay-person-type">Relationship</label>
+              <select id="pay-person-type" name="pay-person-type" required>
+                <option value="self">Self</option>
+                <option value="spouse">Spouse</option>
+                <option value="partner">Partner</option>
+                <option value="friend">Friend</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="pay-job-name">Income Source</label>
+              <input id="pay-job-name" name="pay-job-name" type="text" placeholder="Paycheck, Transfer, Family Support, Side Income..." required>
+            </div>
+            <div class="field">
+              <label for="pay-amount">Paycheck Amount ($)</label>
+              <input id="pay-amount" name="pay-amount" type="number" min="0" step="0.01" required>
+            </div>
+            <div class="field">
+              <label for="pay-frequency">How Often Paid</label>
+              <select id="pay-frequency" name="pay-frequency" required>
+                <option value="weekly">Weekly</option>
+                <option value="biweekly">Every 2 Weeks</option>
+                <option value="semimonthly">Twice per Month</option>
+                <option value="monthly">Monthly</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="pay-date">Next Pay Date</label>
+              <input id="pay-date" name="pay-date" type="date" required>
+            </div>
+            <div class="field">
+              <label for="pay-bank-profile">Deposit Account</label>
+              <select id="pay-bank-profile" name="pay-bank-profile"></select>
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button id="save-income-btn" type="submit">Save Income Source</button>
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button id="cancel-income-edit-btn" class="button-secondary hidden" type="button">Cancel Edit</button>
+            </div>
+          </div>
+        </form>
+
+        <p class="sub" id="pay-status" style="margin-top:10px;">No income information saved for this month yet.</p>
+        <div id="saved-people-wrap" class="saved-people"></div>
+        <div id="income-list-wrap" class="income-list"></div>
+      </section>
+
+      <section class="budget-block block-banking">
+        <h2 class="block-title">Banking Setup</h2>
+        <p class="block-subtitle">Add bank accounts you can connect to income sources. No routing or full account numbers.</p>
+        <form id="bank-form">
+          <div class="row">
+            <div class="field">
+              <label for="bank-name">Bank Name</label>
+              <input id="bank-name" name="bank-name" type="text" placeholder="Ex: Chase, Wells Fargo" required>
+            </div>
+            <div class="field">
+              <label for="account-type">Account Type</label>
+              <select id="account-type" name="account-type" required>
+                <option value="">Select...</option>
+                <option value="checking">Checking</option>
+                <option value="savings">Savings</option>
+                <option value="business-checking">Business Checking</option>
+                <option value="business-savings">Business Savings</option>
+                <option value="prepaid">Prepaid</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="account-alias">Account Nickname / Last 4</label>
+              <input id="account-alias" name="account-alias" type="text" maxlength="24" placeholder="Ex: Bills-1234" required>
+            </div>
+            <div class="field">
+              <label for="bank-balance">Current Balance ($)</label>
+              <input id="bank-balance" name="bank-balance" type="number" min="0" step="0.01" value="0">
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button id="save-bank-btn" type="submit">Save Banking Info</button>
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button id="cancel-bank-edit-btn" class="button-secondary hidden" type="button">Cancel Edit</button>
+            </div>
+          </div>
+        </form>
+        <p class="sub" id="bank-status" style="margin-top:10px;">No banking info saved yet.</p>
+        <div id="bank-list-wrap" class="income-list"></div>
+      </section>
+
+      <section class="budget-block block-expense">
+        <h2 class="block-title">Expense Setup</h2>
+        <p class="block-subtitle">Add monthly charges and track when each one happens.</p>
+        <form id="expense-form">
+          <div class="row row-expense-main">
+            <div class="field">
+              <label for="month">Month</label>
+              <input id="month" name="month" type="month" required>
+            </div>
+            <div class="field">
+              <label for="name">Expense Name</label>
+              <input id="name" name="name" type="text" placeholder="Rent, Fuel, Internet..." required>
+            </div>
+            <div class="field">
+              <label for="category">Category</label>
+              <select id="category" name="category" required>
+                <option value="Housing">Housing</option>
+                <option value="Utilities">Utilities</option>
+                <option value="Groceries">Groceries</option>
+                <option value="Transportation">Transportation</option>
+                <option value="Insurance">Insurance</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Debt Payments">Debt Payments</option>
+                <option value="Savings">Savings</option>
+                <option value="Childcare">Childcare</option>
+                <option value="Education">Education</option>
+                <option value="Subscriptions">Subscriptions</option>
+                <option value="Entertainment">Entertainment</option>
+                <option value="Personal Care">Personal Care</option>
+                <option value="Dining Out">Dining Out</option>
+                <option value="Taxes">Taxes</option>
+                <option value="Giving">Giving</option>
+                <option value="Miscellaneous">Miscellaneous</option>
+                <option value="__other__">Other (Add Custom)</option>
+              </select>
+            </div>
+            <div class="field hidden" id="category-custom-field">
+              <label for="category-custom">Custom Category</label>
+              <input id="category-custom" name="category-custom" type="text" maxlength="40" placeholder="Type custom category...">
+            </div>
+            <div class="field">
+              <label for="charge-date">Charge Date</label>
+              <input id="charge-date" name="charge-date" type="date" required>
+            </div>
+            <div class="field">
+              <label for="amount">Amount ($)</label>
+              <input id="amount" name="amount" type="number" min="0" step="0.01" required>
+            </div>
+            <div class="field">
+              <label for="pay-method">How It's Paid</label>
+              <select id="pay-method" name="pay-method" required>
+                <option value="cash">Cash</option>
+                <option value="debit-card">Debit Card</option>
+                <option value="credit-card">Credit Card</option>
+                <option value="bank-transfer">Bank Transfer</option>
+                <option value="check">Check</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="row row-expense-secondary">
+            <div class="field">
+              <label for="note">Notes (optional)</label>
+              <input id="note" name="note" type="text" placeholder="Any details...">
+            </div>
+
+            <div class="field">
+              <label>&nbsp;</label>
+              <button type="submit">Add Expense</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <div class="summary">
+        <div class="card">
+          <h3>Monthly Total</h3>
+          <p id="monthly-total">$0.00</p>
+        </div>
+        <div class="card">
+          <h3>Expense Count</h3>
+          <p id="expense-count">0</p>
+        </div>
+        <div class="card">
+          <h3>Projected Income (Checks Left)</h3>
+          <p id="monthly-income">$0.00</p>
+        </div>
+        <div class="card">
+          <h3>Checks Remaining (Month)</h3>
+          <p id="checks-remaining">0</p>
+        </div>
+        <div class="card">
+          <h3>Checks Remaining This Year</h3>
+          <p id="checks-remaining-year">0</p>
+        </div>
+        <div class="card">
+          <h3>Remaining Balance</h3>
+          <p id="remaining-balance">$0.00</p>
+        </div>
+      </div>
+
+      <div class="checks-breakdown-panel">
+        <h3>Checks Remaining Breakdown</h3>
+        <div id="checks-remaining-year-breakdown" class="checks-breakdown-grid"></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 style="margin:0;">Monthly Expenses</h2>
+      <p class="sub" id="table-title">Showing all recorded expenses.</p>
+      <div id="table-wrap"></div>
+    </section>
+  
+    <section class="panel personal-note">
+      <h2>Personal Model Notice</h2>
+      <p class="sub">This RAM LOGISTICS SOLUTIONS tool is the personal budgeting model. The business-focused model is in development and will be released soon.</p>
+    </section>
+  </main>
+
+  <script>
+    const expenseStorageKey = "budget_tool_expenses_v1";
+    const payStorageKey = "budget_tool_pay_v1";
+    const peopleStorageKey = "budget_tool_people_v1";
+    const bankStorageKey = "budget_tool_bank_profiles_v1";
+    const incorporatedGoalKey = "budget_tool_incorporated_goal_v1";
+    const goalBudgetFieldKey = "budget_tool_budget_goal_field_v1";
+
+    const form = document.getElementById("expense-form");
+    const payForm = document.getElementById("pay-form");
+    const bankForm = document.getElementById("bank-form");
+    const monthInput = document.getElementById("month");
+    const chargeDateInput = document.getElementById("charge-date");
+    const payMonthInput = document.getElementById("pay-month");
+    const filterMonthInput = document.getElementById("filter-month");
+    const payPersonSelect = document.getElementById("pay-person-select");
+    const payPersonNewField = document.getElementById("pay-person-new-field");
+    const payPersonNewInput = document.getElementById("pay-person-new");
+    const payBankProfileSelect = document.getElementById("pay-bank-profile");
+    const categorySelect = document.getElementById("category");
+    const categoryCustomField = document.getElementById("category-custom-field");
+    const categoryCustomInput = document.getElementById("category-custom");
+
+    const tableWrap = document.getElementById("table-wrap");
+    const monthlyTotalEl = document.getElementById("monthly-total");
+    const expenseCountEl = document.getElementById("expense-count");
+    const monthlyIncomeEl = document.getElementById("monthly-income");
+    const checksRemainingEl = document.getElementById("checks-remaining");
+    const checksRemainingYearEl = document.getElementById("checks-remaining-year");
+    const checksRemainingYearBreakdownEl = document.getElementById("checks-remaining-year-breakdown");
+    const remainingBalanceEl = document.getElementById("remaining-balance");
+    const payStatusEl = document.getElementById("pay-status");
+    const bankStatusEl = document.getElementById("bank-status");
+    const savedPeopleWrap = document.getElementById("saved-people-wrap");
+    const incomeListWrap = document.getElementById("income-list-wrap");
+    const bankListWrap = document.getElementById("bank-list-wrap");
+    const tableTitleEl = document.getElementById("table-title");
+    const saveIncomeBtn = document.getElementById("save-income-btn");
+    const cancelIncomeEditBtn = document.getElementById("cancel-income-edit-btn");
+    const saveBankBtn = document.getElementById("save-bank-btn");
+    const cancelBankEditBtn = document.getElementById("cancel-bank-edit-btn");
+    const resetSuccessEl = document.getElementById("reset-success");
+    const goalBudgetPanelEl = document.getElementById("goal-budget-panel");
+    const goalBudgetTitleEl = document.getElementById("goal-budget-title");
+    const goalBudgetStatusEl = document.getElementById("goal-budget-status");
+    const savingsGoalAmountEl = document.getElementById("savings-goal-amount");
+    const saveSavingsGoalBtn = document.getElementById("save-savings-goal-btn");
+
+    function showResetSuccessBannerIfNeeded() {
+      if (!resetSuccessEl) return;
+      const params = new URLSearchParams(window.location.search || "");
+      if (params.get("reset") !== "1") return;
+      resetSuccessEl.classList.remove("hidden");
+      params.delete("reset");
+      const next = `${window.location.pathname}${params.toString() ? `?${params.toString()}` : ""}${window.location.hash || ""}`;
+      window.history.replaceState({}, "", next);
+    }
+
+
+    function loadIncorporatedGoal() {
+      try { return JSON.parse(localStorage.getItem(incorporatedGoalKey)) || null; } catch { return null; }
+    }
+
+    function loadGoalBudgetField() {
+      try { return JSON.parse(localStorage.getItem(goalBudgetFieldKey)) || null; } catch { return null; }
+    }
+
+    function saveGoalBudgetField(item) {
+      localStorage.setItem(goalBudgetFieldKey, JSON.stringify(item));
+    }
+
+    function renderGoalBudgetPanel() {
+      if (!goalBudgetPanelEl || !goalBudgetTitleEl || !goalBudgetStatusEl || !savingsGoalAmountEl) return;
+      const incorporated = loadIncorporatedGoal();
+      if (!incorporated) {
+        goalBudgetPanelEl.classList.add("hidden");
+        return;
+      }
+
+      goalBudgetPanelEl.classList.remove("hidden");
+      const savedField = loadGoalBudgetField();
+      const amount = savedField && typeof savedField.amount === "number"
+        ? savedField.amount
+        : Number(incorporated.suggestedMonthlySavings || 0);
+
+      goalBudgetTitleEl.textContent = `${incorporated.goalName || "Savings Goal"} | Target: ${formatCurrency(Number(incorporated.targetAmount) || 0)} by ${dateLabel(incorporated.targetDate)}`;
+      savingsGoalAmountEl.value = String(amount || 0);
+      goalBudgetStatusEl.textContent = `Suggested monthly savings: ${formatCurrency(Number(incorporated.suggestedMonthlySavings) || 0)}. You can adjust and save below.`;
+    }
+
+    function toggleExpenseCategoryField() {
+      if (!categorySelect || !categoryCustomField || !categoryCustomInput) return;
+      const isOther = categorySelect.value === "__other__";
+      categoryCustomField.classList.toggle("hidden", !isOther);
+      categoryCustomInput.required = isOther;
+      if (!isOther) categoryCustomInput.value = "";
+    }
+    let editingIncomeId = null;
+    let editingBankId = null;
+
+    function loadExpenses() {
+      try { return JSON.parse(localStorage.getItem(expenseStorageKey)) || []; } catch { return []; }
+    }
+
+    function saveExpenses(items) { localStorage.setItem(expenseStorageKey, JSON.stringify(items)); }
+
+    function loadPayProfiles() {
+      try { return JSON.parse(localStorage.getItem(payStorageKey)) || []; } catch { return []; }
+    }
+
+    function savePayProfiles(items) { localStorage.setItem(payStorageKey, JSON.stringify(items)); }
+
+    function loadPeople() {
+      try { return JSON.parse(localStorage.getItem(peopleStorageKey)) || []; } catch { return []; }
+    }
+
+    function savePeople(items) { localStorage.setItem(peopleStorageKey, JSON.stringify(items)); }
+
+    function loadBankProfiles() {
+      try { return JSON.parse(localStorage.getItem(bankStorageKey)) || []; } catch { return []; }
+    }
+
+    function saveBankProfiles(items) { localStorage.setItem(bankStorageKey, JSON.stringify(items)); }
+
+    function personLabel(type) {
+      if (type === "spouse") return "Spouse";
+      if (type === "partner") return "Partner";
+      if (type === "friend") return "Friend";
+      if (type === "other") return "Other";
+      return "Self";
+    }
+
+    function normalizePeople() {
+      const existing = loadPeople();
+      if (existing.length) return;
+      const fromPay = loadPayProfiles().map(x => x.personName || personLabel(x.personType || x.person || "self")).filter(Boolean);
+      const unique = [...new Set(fromPay.map(x => String(x).trim()).filter(Boolean))];
+      if (!unique.length) unique.push("Self");
+      savePeople(unique);
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+    }
+
+    function monthLabel(value) {
+      if (!value) return "All Months";
+      const [y, m] = value.split("-");
+      const d = new Date(Number(y), Number(m) - 1, 1);
+      return d.toLocaleString("en-US", { month: "long", year: "numeric" });
+    }
+
+    function dateLabel(value) {
+      if (!value) return "-";
+      const d = new Date(`${value}T00:00:00`);
+      if (Number.isNaN(d.getTime())) return "-";
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+
+    function frequencyLabel(frequency) {
+      if (frequency === "weekly") return "weekly";
+      if (frequency === "biweekly") return "every 2 weeks";
+      if (frequency === "semimonthly") return "twice per month";
+      return "monthly";
+    }
+
+    function paymentMethodLabel(method) {
+      if (method === "debit-card") return "Debit Card";
+      if (method === "credit-card") return "Credit Card";
+      if (method === "bank-transfer") return "Bank Transfer";
+      if (method === "check") return "Check";
+      if (method === "other") return "Other";
+      return "Cash";
+    }
+
+    function accountTypeLabel(type) {
+      if (type === "checking") return "Checking";
+      if (type === "savings") return "Savings";
+      if (type === "business-checking") return "Business Checking";
+      if (type === "business-savings") return "Business Savings";
+      if (type === "prepaid") return "Prepaid";
+      if (type === "other") return "Other";
+      return "-";
+    }
+
+    function getPersonName(entry) {
+      return entry.personName || personLabel(entry.personType || entry.person || "self");
+    }
+
+    function getPersonType(entry) {
+      return entry.personType || (entry.person || "self");
+    }
+
+    function addMonthsClamped(date, monthsToAdd) {
+      const y = date.getFullYear();
+      const m = date.getMonth();
+      const d = date.getDate();
+      const targetFirst = new Date(y, m + monthsToAdd, 1);
+      const lastDay = new Date(targetFirst.getFullYear(), targetFirst.getMonth() + 1, 0).getDate();
+      return new Date(targetFirst.getFullYear(), targetFirst.getMonth(), Math.min(d, lastDay));
+    }
+
+    function addPeriod(date, frequency) {
+      const next = new Date(date.getTime());
+      if (frequency === "weekly") {
+        next.setDate(next.getDate() + 7);
+        return next;
+      }
+      if (frequency === "biweekly") {
+        next.setDate(next.getDate() + 14);
+        return next;
+      }
+      if (frequency === "semimonthly") {
+        next.setDate(next.getDate() + 15);
+        return next;
+      }
+      return addMonthsClamped(next, 1);
+    }
+
+    function checksRemainingInMonth(nextPayDateValue, frequency, monthValue) {
+      if (!nextPayDateValue || !monthValue) return 0;
+      const [y, m] = monthValue.split("-").map(Number);
+      const monthStart = new Date(y, m - 1, 1);
+      const monthEnd = new Date(y, m, 0);
+      let cursor = new Date(`${nextPayDateValue}T00:00:00`);
+      if (Number.isNaN(cursor.getTime())) return 0;
+
+      let guard = 0;
+      while (cursor < monthStart && guard < 500) {
+        cursor = addPeriod(cursor, frequency);
+        guard += 1;
+      }
+
+      let count = 0;
+      while (cursor <= monthEnd && guard < 1000) {
+        count += 1;
+        cursor = addPeriod(cursor, frequency);
+        guard += 1;
+      }
+      return count;
+    }
+
+    function checksRemainingInYear(nextPayDateValue, frequency, monthValue) {
+      if (!nextPayDateValue || !monthValue) return 0;
+      const [y, m] = monthValue.split("-").map(Number);
+      const rangeStart = new Date(y, m - 1, 1);
+      const yearEnd = new Date(y, 11, 31);
+      let cursor = new Date(`${nextPayDateValue}T00:00:00`);
+      if (Number.isNaN(cursor.getTime())) return 0;
+
+      let guard = 0;
+      while (cursor < rangeStart && guard < 500) {
+        cursor = addPeriod(cursor, frequency);
+        guard += 1;
+      }
+
+      let count = 0;
+      while (cursor <= yearEnd && guard < 1000) {
+        count += 1;
+        cursor = addPeriod(cursor, frequency);
+        guard += 1;
+      }
+      return count;
+    }
+
+    function incomeProjection(entry, monthValue) {
+      const amount = Number(entry.amount) || 0;
+      const checks = checksRemainingInMonth(entry.nextPayDate || `${monthValue}-01`, entry.frequency || "monthly", monthValue);
+      const yearChecks = checksRemainingInYear(entry.nextPayDate || `${monthValue}-01`, entry.frequency || "monthly", monthValue);
+      return {
+        checks,
+        yearChecks,
+        projectedIncome: amount * checks
+      };
+    }
+
+    function populatePeopleSelect(preferredName) {
+      const people = loadPeople();
+      const current = payPersonSelect.value;
+      const selected = preferredName || current;
+      const options = ['<option value="__new__">+ Add New Person</option>']
+        .concat(people.map(name => `<option value="${name.replace(/"/g, "&quot;")}">${name}</option>`));
+      payPersonSelect.innerHTML = options.join("");
+
+      if (selected && people.includes(selected)) payPersonSelect.value = selected;
+      else if (people.length) payPersonSelect.value = people[0];
+      else payPersonSelect.value = "__new__";
+
+      toggleNewPersonField();
+    }
+
+    function toggleNewPersonField() {
+      const isNew = payPersonSelect.value === "__new__";
+      payPersonNewField.classList.toggle("hidden", !isNew);
+      payPersonNewInput.required = isNew;
+      if (!isNew) payPersonNewInput.value = "";
+    }
+
+    
+    function populateBankProfileSelect(preferredId) {
+      const banks = loadBankProfiles();
+      const current = payBankProfileSelect.value;
+      const selected = preferredId || current;
+      const options = ['<option value="">Select account (optional)</option>']
+        .concat(banks.map(b => `<option value="${b.id}">${b.accountAlias || "Account"} - ${b.bankName}</option>`));
+      payBankProfileSelect.innerHTML = options.join("");
+
+      if (selected && banks.some(b => b.id === selected)) payBankProfileSelect.value = selected;
+      else payBankProfileSelect.value = "";
+    }
+
+    function setBankEditMode(isEdit) {
+      saveBankBtn.textContent = isEdit ? "Update Banking Info" : "Save Banking Info";
+      cancelBankEditBtn.classList.toggle("hidden", !isEdit);
+    }
+
+    function resetBankForm() {
+      editingBankId = null;
+      bankForm.reset();
+      document.getElementById("bank-balance").value = "0";
+      setBankEditMode(false);
+    }
+
+    function startBankEdit(id) {
+      const profile = loadBankProfiles().find(x => x.id === id);
+      if (!profile) return;
+      editingBankId = id;
+      document.getElementById("bank-name").value = profile.bankName || "";
+      document.getElementById("account-type").value = profile.accountType || "";
+      document.getElementById("account-alias").value = profile.accountAlias || "";
+      document.getElementById("bank-balance").value = String(profile.bankBalance ?? 0);
+      setBankEditMode(true);
+    }
+
+    function renderBankProfiles() {
+      const banks = loadBankProfiles();
+      if (!banks.length) {
+        bankListWrap.innerHTML = '<div class="table-block"><h3>Saved Bank Accounts</h3><p class="empty">No bank accounts saved yet.</p></div>';
+        return;
+      }
+
+      const rows = banks.map(b => `
+        <tr>
+          <td>${b.bankName}</td>
+          <td>${accountTypeLabel(b.accountType)}</td>
+          <td>${b.accountAlias || "-"}</td>
+          <td>${formatCurrency(Number(b.bankBalance) || 0)}</td>
+          <td class="actions">
+            <button type="button" data-bank-id="${b.id}" data-action="edit">Edit</button>
+            <button type="button" data-bank-id="${b.id}" data-action="delete">Delete</button>
+          </td>
+        </tr>
+      `).join("");
+
+      bankListWrap.innerHTML = `
+        <div class="table-block">
+          <h3>Saved Bank Accounts</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Bank Name</th>
+                <th>Account Type</th>
+                <th>Account Nickname / Last 4</th>
+                <th>Current Balance</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+    function renderPeopleSummary(payRows, filterMonth) {
+      if (!payRows.length) {
+        savedPeopleWrap.innerHTML = `<div class="table-block"><h3>People Income Snapshot</h3><p class="empty">No income data for ${monthLabel(filterMonth)} yet.</p></div>`;
+        return;
+      }
+
+      const byPerson = new Map();
+      for (const row of payRows) {
+        const person = getPersonName(row);
+        const projection = incomeProjection(row, filterMonth);
+        if (!byPerson.has(person)) {
+          byPerson.set(person, {
+            person,
+            sources: 0,
+            checksMonth: 0,
+            checksYear: 0,
+            projectedIncome: 0,
+            paycheckTotal: 0,
+            firstIncomeId: row.id
+          });
+        }
+        const item = byPerson.get(person);
+        item.sources += 1;
+        item.checksMonth += projection.checks;
+        item.checksYear += projection.yearChecks;
+        item.projectedIncome += projection.projectedIncome;
+        item.paycheckTotal += Number(row.amount) || 0;
+      }
+
+      const rows = [...byPerson.values()]
+        .sort((a, b) => a.person.localeCompare(b.person))
+        .map(p => {
+          const safeName = p.person.replace(/"/g, "&quot;");
+          return `
+            <tr>
+              <td>${p.person}</td>
+              <td>${p.sources}</td>
+              <td>${p.checksMonth}</td>
+              <td>${p.checksYear}</td>
+              <td>${formatCurrency(p.projectedIncome)}</td>
+              <td>${formatCurrency(p.paycheckTotal / p.sources)}</td>
+              <td class="actions">
+                <button type="button" data-income-id="${p.firstIncomeId}" data-person-name="${safeName}" data-action="edit-person">Edit</button>
+                <button type="button" data-person-name="${safeName}" data-action="delete-person">Delete</button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+
+      savedPeopleWrap.innerHTML = `
+        <div class="table-block">
+          <h3>People Income Snapshot For ${monthLabel(filterMonth)}</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Person</th>
+                <th>Income Sources</th>
+                <th>Checks Left (Month)</th>
+                <th>Checks Left (Year)</th>
+                <th>Projected Income</th>
+                <th>Avg Paycheck</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderYearChecksBreakdown(payRows, filterMonth) {
+      if (!checksRemainingYearBreakdownEl) return;
+      if (!payRows.length) {
+        checksRemainingYearBreakdownEl.innerHTML = '<div class="checks-breakdown-card"><h4>All Sources Total</h4><p>0</p></div>';
+        return;
+      }
+
+      const byPerson = new Map();
+      for (const row of payRows) {
+        const person = getPersonName(row);
+        const projection = incomeProjection(row, filterMonth);
+        byPerson.set(person, (byPerson.get(person) || 0) + projection.yearChecks);
+      }
+
+      const sortedPeople = [...byPerson.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+      const totalChecks = sortedPeople.reduce((sum, [, value]) => sum + value, 0);
+
+      const parts = [];
+      sortedPeople.forEach(([name, checks], index) => {
+        parts.push(`<div class="checks-breakdown-card"><h4>${name}</h4><p>${checks}</p></div>`);
+        if (index < sortedPeople.length - 1) {
+          parts.push('<div class="checks-breakdown-operator">+</div>');
+        }
+      });
+
+      if (sortedPeople.length) {
+        parts.push('<div class="checks-breakdown-operator">=</div>');
+      }
+      parts.push(`<div class="checks-breakdown-card"><h4>All Sources Total</h4><p>${totalChecks}</p></div>`);
+
+      checksRemainingYearBreakdownEl.innerHTML = parts.join("");
+    }
+    function renderIncomeList(payRows, filterMonth) {
+      if (!payRows.length) {
+        incomeListWrap.innerHTML = `<div class="table-block"><h3>Income Sources For ${monthLabel(filterMonth)}</h3><p class="empty">No income sources saved for this month.</p></div>`;
+        return;
+      }
+
+      const bankProfiles = loadBankProfiles();
+      const bankById = new Map(bankProfiles.map(x => [x.id, x]));
+
+      const items = [...payRows].sort((a, b) => {
+        const personA = getPersonName(a).toLowerCase();
+        const personB = getPersonName(b).toLowerCase();
+        if (personA !== personB) return personA.localeCompare(personB);
+        return String(a.jobName || "").toLowerCase().localeCompare(String(b.jobName || "").toLowerCase());
+      });
+
+      const rows = items.map(p => {
+        const projection = incomeProjection(p, filterMonth);
+        const bank = bankById.get(p.bankProfileId || "");
+        return `
+          <tr>
+            <td>${getPersonName(p)}</td>
+            <td>${personLabel(getPersonType(p))}</td>
+            <td>${p.jobName || "Source"}</td>
+            <td>${formatCurrency(Number(p.amount))}</td>
+            <td>${frequencyLabel(p.frequency)}</td>
+            <td>${dateLabel(p.nextPayDate)}</td>
+            <td>${(bank && bank.bankName) || "-"}</td>
+            <td>${accountTypeLabel((bank && bank.accountType) || "")}</td>
+            <td>${(bank && bank.accountAlias) || "-"}</td>
+            <td>${projection.checks}</td>
+            <td>${projection.yearChecks}</td>
+            <td>${formatCurrency(projection.projectedIncome)}</td>
+            <td class="actions">
+              <button type="button" data-income-id="${p.id}" data-action="edit">Edit</button>
+              <button type="button" data-income-id="${p.id}" data-action="delete">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join("");
+
+      incomeListWrap.innerHTML = `
+        <div class="table-block">
+          <h3>Income Sources For ${monthLabel(filterMonth)}</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Person</th>
+                <th>Relationship</th>
+                <th>Income Source</th>
+                <th>Paycheck</th>
+                <th>Frequency</th>
+                <th>Next Pay Date</th>
+                <th>Bank</th>
+                <th>Account Type</th>
+                <th>Acct Nickname / Last 4</th>
+                <th>Checks Left (Month)</th>
+                <th>Checks Left (Year)</th>
+                <th>Projected Income</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function setIncomeEditMode(isEdit) {
+      saveIncomeBtn.textContent = isEdit ? "Update Income Source" : "Save Income Source";
+      cancelIncomeEditBtn.classList.toggle("hidden", !isEdit);
+    }
+
+    function resetIncomeForm() {
+      editingIncomeId = null;
+      payForm.reset();
+      payMonthInput.value = filterMonthInput.value || new Date().toISOString().slice(0, 7);
+      document.getElementById("pay-date").value = new Date().toISOString().slice(0, 10);
+      populatePeopleSelect("Self");
+      populateBankProfileSelect("");
+      setIncomeEditMode(false);
+    }
+
+    function startIncomeEdit(id) {
+      const income = loadPayProfiles();
+      const entry = income.find(x => x.id === id);
+      if (!entry) return;
+
+      editingIncomeId = id;
+
+      const people = loadPeople();
+      if (!people.includes(entry.personName)) {
+        people.push(entry.personName);
+        savePeople(people);
+      }
+      populatePeopleSelect(entry.personName);
+
+      payMonthInput.value = entry.month || filterMonthInput.value;
+      document.getElementById("pay-person-type").value = entry.personType || "self";
+      document.getElementById("pay-job-name").value = entry.jobName || "";
+      document.getElementById("pay-amount").value = String(entry.amount ?? "");
+      document.getElementById("pay-frequency").value = entry.frequency || "monthly";
+      document.getElementById("pay-date").value = entry.nextPayDate || "";
+      payBankProfileSelect.value = entry.bankProfileId || "";
+
+      setIncomeEditMode(true);
+    }
+    function render() {
+      const allExpenses = loadExpenses();
+      const allIncome = loadPayProfiles();
+      const filterMonth = filterMonthInput.value;
+
+      const expenseRows = filterMonth ? allExpenses.filter(x => x.month === filterMonth) : allExpenses;
+      const incomeRows = filterMonth ? allIncome.filter(x => x.month === filterMonth) : allIncome;
+
+      const incomeTotals = incomeRows.reduce((acc, p) => {
+        const projection = incomeProjection(p, filterMonth);
+        acc.checks += projection.checks;
+        acc.yearChecks += projection.yearChecks;
+        acc.amount += projection.projectedIncome;
+        return acc;
+      }, { checks: 0, yearChecks: 0, amount: 0 });
+
+      const totalExpense = expenseRows.reduce((sum, r) => sum + Number(r.amount), 0);
+      const totalIncome = incomeTotals.amount;
+      const remaining = totalIncome - totalExpense;
+
+      monthlyTotalEl.textContent = formatCurrency(totalExpense);
+      expenseCountEl.textContent = String(expenseRows.length);
+      monthlyIncomeEl.textContent = formatCurrency(totalIncome);
+      checksRemainingEl.textContent = String(incomeTotals.checks);
+      checksRemainingYearEl.textContent = String(incomeTotals.yearChecks);
+      renderYearChecksBreakdown(incomeRows, filterMonth);
+      remainingBalanceEl.textContent = formatCurrency(remaining);
+
+      tableTitleEl.textContent = filterMonth
+        ? `Tracking ${monthLabel(filterMonth)} expenses.`
+        : "Showing all recorded expenses.";
+
+      const selectedYear = filterMonth ? filterMonth.split("-")[0] : "the selected year";
+      payStatusEl.textContent = incomeRows.length
+        ? `${incomeRows.length} income source(s) saved for ${monthLabel(filterMonth)}. ${incomeTotals.checks} check(s) left this month and ${incomeTotals.yearChecks} check(s) left for ${selectedYear}.`
+        : `No income information saved for ${monthLabel(filterMonth)} yet.`;
+
+      renderPeopleSummary(incomeRows, filterMonth);
+      renderIncomeList(incomeRows, filterMonth);
+      renderBankProfiles();
+      renderGoalBudgetPanel();
+
+      const bankProfiles = loadBankProfiles();
+      const banksCount = bankProfiles.length;
+      const totalBankBalance = bankProfiles.reduce((sum, b) => sum + (Number(b.bankBalance) || 0), 0);
+      bankStatusEl.textContent = banksCount ? `${banksCount} bank account(s) saved. Total balance: ${formatCurrency(totalBankBalance)}.` : "No banking info saved yet.";
+
+      if (!expenseRows.length) {
+        tableWrap.innerHTML = "<p class='empty'>No expenses for this view yet.</p>";
+        return;
+      }
+
+      const ordered = [...expenseRows].sort((a, b) => {
+        if (a.month === b.month) return String(a.chargeDate || "").localeCompare(String(b.chargeDate || ""));
+        return a.month < b.month ? 1 : -1;
+      });
+
+      const html = ordered.map(item => `
+        <tr>
+          <td>${monthLabel(item.month)}</td>
+          <td>${dateLabel(item.chargeDate)}</td>
+          <td>${item.name}</td>
+          <td>${item.category}</td>
+          <td>${item.note || "-"}</td>
+          <td>${paymentMethodLabel(item.payMethod)}</td>
+          <td class="amount">${formatCurrency(Number(item.amount))}</td>
+          <td class="actions"><button data-id="${item.id}" type="button">Delete</button></td>
+        </tr>
+      `).join("");
+
+      tableWrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Charge Date</th>
+              <th>Expense</th>
+              <th>Category</th>
+              <th>Note</th>
+              <th>Payment Method</th>
+              <th>Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>${html}</tbody>
+        </table>
+      `;
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const data = new FormData(form);
+      let expenseCategory = String(data.get("category") || "").trim();
+      if (expenseCategory === "__other__") expenseCategory = String(data.get("category-custom") || "").trim();
+      const entry = {
+        id: crypto.randomUUID(),
+        month: String(data.get("month") || ""),
+        name: String(data.get("name") || "").trim(),
+        category: expenseCategory,
+        chargeDate: String(data.get("charge-date") || ""),
+        note: String(data.get("note") || "").trim(),
+        payMethod: String(data.get("pay-method") || "cash"),
+        amount: Number(data.get("amount"))
+      };
+
+      if (!entry.month || !entry.name || !entry.category || !entry.chargeDate || !(entry.amount >= 0)) return;
+
+      const all = loadExpenses();
+      all.push(entry);
+      saveExpenses(all);
+
+      form.reset();
+      monthInput.value = filterMonthInput.value || new Date().toISOString().slice(0, 7);
+      chargeDateInput.value = new Date().toISOString().slice(0, 10);
+      if (categorySelect) categorySelect.value = "Housing";
+      toggleExpenseCategoryField();
+      render();
+    });
+
+    payForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const data = new FormData(payForm);
+
+      let personName = String(data.get("pay-person-select") || "").trim();
+      if (personName === "__new__") personName = String(data.get("pay-person-new") || "").trim();
+
+      const entry = {
+        id: crypto.randomUUID(),
+        month: String(data.get("pay-month") || ""),
+        personName,
+        personType: String(data.get("pay-person-type") || "self"),
+        jobName: String(data.get("pay-job-name") || "").trim(),
+        amount: Number(data.get("pay-amount")),
+        frequency: String(data.get("pay-frequency") || "monthly"),
+        nextPayDate: String(data.get("pay-date") || ""),
+        bankProfileId: String(data.get("pay-bank-profile") || "")
+      };
+
+      if (!entry.month || !entry.personName || !entry.jobName || !entry.nextPayDate || !(entry.amount >= 0)) return;
+      
+      const people = loadPeople();
+      if (!people.includes(entry.personName)) {
+        people.push(entry.personName);
+        savePeople(people);
+      }
+
+      const all = loadPayProfiles();
+      if (editingIncomeId) {
+        const idx = all.findIndex(x => x.id === editingIncomeId);
+        if (idx >= 0) {
+          all[idx] = { ...all[idx], ...entry, id: editingIncomeId };
+        }
+      } else {
+        all.push(entry);
+      }
+      savePayProfiles(all);
+
+      filterMonthInput.value = entry.month;
+      resetIncomeForm();
+      populatePeopleSelect(entry.personName);
+      populateBankProfileSelect(entry.bankProfileId || "");
+      render();
+    });
+
+    payPersonSelect.addEventListener("change", toggleNewPersonField);
+    if (categorySelect) categorySelect.addEventListener("change", toggleExpenseCategoryField);
+    bankForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const data = new FormData(bankForm);
+
+      const profile = {
+        id: editingBankId || crypto.randomUUID(),
+        bankName: String(data.get("bank-name") || "").trim(),
+        accountType: String(data.get("account-type") || ""),
+        accountAlias: String(data.get("account-alias") || "").trim(),
+        bankBalance: Number(data.get("bank-balance") || 0)
+      };
+
+      if (!profile.bankName || !profile.accountType || !profile.accountAlias) return;
+      if (!(profile.bankBalance >= 0)) return;
+      if (/\d{5,}/.test(profile.accountAlias)) {
+        alert("For safety, use a nickname or only last 4 digits. Do not enter full account numbers.");
+        return;
+      }
+
+      const all = loadBankProfiles().filter(x => x.id !== profile.id);
+      all.push(profile);
+      saveBankProfiles(all);
+
+      populateBankProfileSelect(profile.id);
+      resetBankForm();
+      render();
+    });
+
+    cancelIncomeEditBtn.addEventListener("click", () => {
+      resetIncomeForm();
+    });
+
+    cancelBankEditBtn.addEventListener("click", () => {
+      resetBankForm();
+    });
+
+    bankListWrap.addEventListener("click", event => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) return;
+
+      const id = target.dataset.bankId;
+      const action = target.dataset.action;
+      if (!id || !action) return;
+
+      if (action === "edit") {
+        startBankEdit(id);
+        return;
+      }
+
+      if (action === "delete") {
+        const next = loadBankProfiles().filter(item => item.id !== id);
+        saveBankProfiles(next);
+
+        const updatedIncome = loadPayProfiles().map(item => item.bankProfileId === id ? { ...item, bankProfileId: "" } : item);
+        savePayProfiles(updatedIncome);
+
+        if (editingBankId === id) resetBankForm();
+        populateBankProfileSelect("");
+        render();
+      }
+    });
+
+    incomeListWrap.addEventListener("click", event => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) return;
+
+      const id = target.dataset.incomeId;
+      const action = target.dataset.action;
+      if (!id || !action) return;
+
+      if (action === "edit") {
+        startIncomeEdit(id);
+        return;
+      }
+
+      if (action === "delete") {
+        const next = loadPayProfiles().filter(item => item.id !== id);
+        savePayProfiles(next);
+        if (editingIncomeId === id) resetIncomeForm();
+        render();
+      }
+    });
+    savedPeopleWrap.addEventListener("click", event => {
+      const node = event.target;
+      if (!(node instanceof Element)) return;
+      const target = node.closest("button");
+      if (!(target instanceof HTMLButtonElement)) return;
+
+      const action = String(target.dataset.action || "").trim();
+      const incomeId = String(target.dataset.incomeId || "").trim();
+      const personName = String(target.dataset.personName || "").trim();
+      if (!action) return;
+
+      if ((action === "edit-person" || action === "edit") && incomeId) {
+        startIncomeEdit(incomeId);
+        payForm.scrollIntoView({ behavior: "smooth", block: "start" });
+        return;
+      }
+
+      if (!(action === "delete-person" || action === "delete") || !personName) return;
+
+      const filterMonth = filterMonthInput.value;
+      const income = loadPayProfiles();
+      const personRows = income
+        .filter(item => item.month === filterMonth && getPersonName(item) === personName)
+        .sort((a, b) => String(a.nextPayDate || "").localeCompare(String(b.nextPayDate || "")));
+
+      if (!personRows.length) return;
+
+      const ok = window.confirm(`Delete all income sources for ${personName} in ${monthLabel(filterMonth)}?`);
+      if (!ok) return;
+
+      const next = income.filter(item => !(item.month === filterMonth && getPersonName(item) === personName));
+      const removedIds = new Set(personRows.map(item => item.id));
+      if (editingIncomeId && removedIds.has(editingIncomeId)) resetIncomeForm();
+      savePayProfiles(next);
+      render();
+    });
+
+
+
+    if (saveSavingsGoalBtn) {
+      saveSavingsGoalBtn.addEventListener("click", () => {
+        const incorporated = loadIncorporatedGoal();
+        if (!incorporated) return;
+        const amount = Number(savingsGoalAmountEl.value || 0);
+        if (!(amount >= 0)) return;
+        saveGoalBudgetField({
+          enabled: true,
+          goalName: incorporated.goalName,
+          amount,
+          targetDate: incorporated.targetDate,
+          updatedAt: new Date().toISOString()
+        });
+        goalBudgetStatusEl.textContent = `Monthly savings goal saved at ${formatCurrency(amount)}.`;
+      });
+    }
+    filterMonthInput.addEventListener("change", () => {
+      payMonthInput.value = filterMonthInput.value;
+      render();
+    });
+
+    tableWrap.addEventListener("click", event => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) return;
+      const id = target.dataset.id;
+      if (!id) return;
+
+      const next = loadExpenses().filter(item => item.id !== id);
+      saveExpenses(next);
+      render();
+    });
+
+    const thisMonth = new Date().toISOString().slice(0, 7);
+    monthInput.value = thisMonth;
+    chargeDateInput.value = new Date().toISOString().slice(0, 10);
+    if (categorySelect) categorySelect.value = "Housing";
+    toggleExpenseCategoryField();
+    payMonthInput.value = thisMonth;
+    filterMonthInput.value = thisMonth;
+    document.getElementById("pay-date").value = new Date().toISOString().slice(0, 10);
+
+    normalizePeople();
+    populatePeopleSelect("Self");
+    populateBankProfileSelect("");
+    setIncomeEditMode(false);
+    setBankEditMode(false);
+    showResetSuccessBannerIfNeeded();
+    document.getElementById("bank-balance").value = "0";
+    render();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

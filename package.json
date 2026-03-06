@@ -6,6 +6,13 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "start:4000": "set PORT=4000&& set HOST=127.0.0.1&& node server.js"
+    "start:4000": "set PORT=4000&& set HOST=127.0.0.1&& node server.js",
+    "cf:dev": "wrangler dev",
+    "cf:deploy": "wrangler deploy",
+    "cf:d1:migrate": "wrangler d1 execute ram-budget-db --file cloudflare/schema.sql",
+    "cf:d1:remote:migrate": "wrangler d1 execute ram-budget-db --remote --file cloudflare/schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.71.0"
   }
 }

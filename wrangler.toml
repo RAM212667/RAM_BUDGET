@@ -1,0 +1,15 @@
+name = "ram-budget"
+main = "cloudflare/worker.js"
+compatibility_date = "2026-03-05"
+
+[assets]
+directory = "public"
+binding = "ASSETS"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "ram-budget-db"
+database_id = "1f6ab80f-0318-400d-a23f-e58ce03e686a"
+
+[vars]
+APP_NAME = "Money Command Center"

@@ -1,0 +1,4 @@
+node_modules/
+.wrangler/
+.server.out.log
+.server.err.log

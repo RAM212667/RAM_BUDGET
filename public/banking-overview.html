@@ -1,0 +1,980 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAM LOGISTICS SOLUTIONS | Personal Banking Overview</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --panel: #fffdf8;
+      --ink: #1f2022;
+      --accent: #0a6a4c;
+      --accent-soft: #def4ea;
+      --info-soft: #eef6ff;
+      --info-border: #bed5ef;
+      --warn-soft: #fff7e8;
+      --warn-border: #e7cc9c;
+      --danger: #b42318;
+      --border: #d8d2c6;
+      --muted: #65707a;
+      --shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, #e9f4ef 0%, transparent 38%),
+        radial-gradient(circle at 88% 86%, #f5ecd9 0%, transparent 35%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    h1 { margin: 0 0 8px; font-size: 1.8rem; }
+    .sub { margin: 0; color: var(--muted); }
+    .brand-kicker {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid #b9d9cb;
+      background: #eef9f3;
+      color: #0f5f46;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .model-pill {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #dfcfaf;
+      background: #fff4e2;
+      color: #755019;
+      font-size: 0.74rem;
+      font-weight: 700;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .personal-note {
+      border: 1px dashed #cebfa2;
+      background: #fff9ef;
+    }
+
+    .personal-note h2 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      color: #5f4218;
+    }
+
+    .page-nav {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .page-link {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      color: #1c5e48;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      width: auto;
+    }
+
+    .page-link-danger {
+      margin-left: auto;
+      color: #8d1f1b;
+      border-color: #e2b3af;
+      background: #fff5f5;
+    }
+    .reset-control {
+      margin-top: 8px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+
+    .reset-confirm {
+      margin-top: 6px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .reset-confirm.hidden {
+      display: none;
+    }
+
+    .reset-confirm label {
+      font-size: 0.88rem;
+      color: #6b4a45;
+      font-weight: 600;
+    }
+
+    .reset-confirm input {
+      max-width: 170px;
+      width: auto;
+    }
+
+    .reset-confirm button {
+      width: auto;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .reset-confirm button[data-reset-confirm-btn] {
+      color: #8d1f1b;
+      border-color: #e2b3af;
+    }
+
+    .reset-confirm button[data-reset-confirm-btn]:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .controls {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: minmax(220px, 280px);
+      gap: 12px;
+    }
+
+    .row {
+      margin-top: 14px;
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      align-items: end;
+    }
+
+    .field { min-width: 0; }
+
+    label {
+      font-size: 0.9rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    input, select, button {
+      width: 100%;
+      font: inherit;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      background: #fff;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .button-secondary {
+      background: #eef2f1;
+      color: #1f4f40;
+      border: 1px solid #cbd6d2;
+    }
+
+    .hidden { display: none; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .card {
+      background: var(--accent-soft);
+      border: 1px solid #c7e8d9;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .card.info {
+      background: var(--info-soft);
+      border-color: var(--info-border);
+    }
+
+    .card.warn {
+      background: var(--warn-soft);
+      border-color: var(--warn-border);
+    }
+
+    .card h3 { margin: 0; font-size: 0.86rem; color: #1c5a45; }
+    .card p { margin: 8px 0 0; font-size: 1.25rem; font-weight: 700; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th { color: var(--muted); font-size: 0.86rem; }
+
+    .actions button {
+      background: #fff;
+      color: var(--danger);
+      border: 1px solid #efc0be;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+    }
+
+    .empty { color: var(--muted); margin-top: 12px; }
+
+    @media (max-width: 900px) {
+      body { padding: 14px; }
+      .summary { grid-template-columns: 1fr 1fr; }
+      .controls { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .summary { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="storage-sync.js"></script>
+  <script src="reset-control.js"></script>
+  <script src="month-year-picker.js"></script>
+  <script src="nav-active.js"></script>
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <div class="brand-kicker">Powered by RAM LOGISTICS SOLUTIONS</div>
+      <h1>Banking Overview <span class="model-pill">Personal Model</span></h1>
+      <p class="sub">Track bank balances, apply monthly expenses, and include forecasted paychecks.</p>
+      <div class="page-nav">
+        <a class="page-link" href="index.html">Money Command Center</a>
+        <a class="page-link" href="hourly-tracker.html">Hourly Income Tracker</a>
+        <a class="page-link" href="banking-overview.html">Banking Overview</a>
+        <a class="page-link" href="goals-budget.html">Goals Planner</a>
+        <a class="page-link" href="charts-dashboard.html">Money Map Charts</a>
+        <button class="page-link page-link-danger" type="button" data-reset-all>Reset All Data</button>
+      </div>
+      <div class="reset-control" data-reset-control>
+        <div class="reset-confirm hidden" data-reset-confirm-wrap>
+          <label>Type <strong>RESET</strong> to confirm:</label>
+          <input type="text" data-reset-input placeholder="RESET" autocomplete="off">
+          <button type="button" data-reset-confirm-btn disabled>Confirm Reset</button>
+          <button type="button" data-reset-cancel-btn>Cancel</button>
+        </div>
+      </div>
+<div class="controls">
+        <div>
+          <label for="filter-month">Expense Month To Apply</label>
+          <input id="filter-month" type="month">
+        </div>
+      </div>
+
+      <div class="summary">
+        <div class="card info">
+          <h3>Total Bank Balance</h3>
+          <p id="total-balance">$0.00</p>
+        </div>
+        <div class="card">
+          <h3>Month Expenses Applied</h3>
+          <p id="month-expenses">$0.00</p>
+        </div>
+        <div class="card warn">
+          <h3>Available After Expenses</h3>
+          <p id="after-expenses">$0.00</p>
+        </div>
+        <div class="card info">
+          <h3>Forecasted Paychecks (Added)</h3>
+          <p id="forecast-total">$0.00</p>
+        </div>
+        <div class="card warn">
+          <h3>Projected Balance (With Forecast)</h3>
+          <p id="projected-total">$0.00</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 style="margin:0;">Forecasted Paychecks</h2>
+      <p class="sub">Add who gets paid, when payday is, and which account receives it.</p>
+      <form id="forecast-form">
+        <div class="row">
+          <div class="field">
+            <label for="forecast-person-select">Person</label>
+            <select id="forecast-person-select" name="forecast-person-select" required></select>
+          </div>
+          <div class="field hidden" id="forecast-person-new-field">
+            <label for="forecast-person-new">New Person Name</label>
+            <input id="forecast-person-new" name="forecast-person-new" type="text" placeholder="Ex: Zoie">
+          </div>
+          <div class="field">
+            <label for="forecast-date-mode">Payday Option</label>
+            <select id="forecast-date-mode" name="forecast-date-mode">
+              <option value="manual">Select Date Manually</option>
+              <option value="frequency">Use Saved Frequency Dates</option>
+            </select>
+          </div>
+          <div class="field" id="forecast-date-manual-field">
+            <label for="forecast-date">Payday Date</label>
+            <input id="forecast-date" name="forecast-date" type="date" required>
+          </div>
+          <div class="field hidden" id="forecast-date-frequency-field">
+            <label for="forecast-date-select">Paycheck This Month</label>
+            <select id="forecast-date-select" name="forecast-date-select"></select>
+          </div>
+          <div class="field">
+            <label for="forecast-account">Deposit Account</label>
+            <select id="forecast-account" name="forecast-account" required></select>
+          </div>
+          <div class="field">
+            <label for="forecast-amount">Forecasted Amount ($)</label>
+            <input id="forecast-amount" name="forecast-amount" type="number" min="0" step="0.01" required>
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button id="save-forecast-btn" type="submit">Save Forecasted Payday</button>
+          </div>
+          <div class="field">
+            <label>&nbsp;</label>
+            <button id="cancel-forecast-edit-btn" class="button-secondary hidden" type="button">Cancel Edit</button>
+          </div>
+        </div>
+      </form>
+      <p class="sub" id="forecast-status" style="margin-top:10px;">No forecasted paychecks for this month yet.</p>
+      <div id="forecast-wrap"></div>
+    </section>
+
+    <section class="panel">
+      <h2 style="margin:0;">Accounts After Expense And Forecast Impact</h2>
+      <p class="sub" id="accounts-title">Applying expenses and forecasted deposits to selected month.</p>
+      <div id="accounts-wrap"></div>
+    </section>
+
+    <section class="panel">
+      <h2 style="margin:0;">Expense Detail Used In Calculation</h2>
+      <p class="sub" id="expenses-title">Selected month expenses.</p>
+      <div id="expenses-wrap"></div>
+    </section>
+  
+    <section class="panel personal-note">
+      <h2>Personal Model Notice</h2>
+      <p class="sub">This RAM LOGISTICS SOLUTIONS tool is the personal budgeting model. The business-focused model is in development and will be released soon.</p>
+    </section>
+  </main>
+
+  <script>
+    const bankStorageKey = "budget_tool_bank_profiles_v1";
+    const expenseStorageKey = "budget_tool_expenses_v1";
+    const forecastStorageKey = "budget_tool_bank_forecast_v1";
+    const peopleStorageKey = "budget_tool_people_v1";
+    const incomeStorageKey = "budget_tool_pay_v1";
+
+    const filterMonthInput = document.getElementById("filter-month");
+    const totalBalanceEl = document.getElementById("total-balance");
+    const monthExpensesEl = document.getElementById("month-expenses");
+    const afterExpensesEl = document.getElementById("after-expenses");
+    const forecastTotalEl = document.getElementById("forecast-total");
+    const projectedTotalEl = document.getElementById("projected-total");
+
+    const accountsTitleEl = document.getElementById("accounts-title");
+    const accountsWrap = document.getElementById("accounts-wrap");
+    const expensesTitleEl = document.getElementById("expenses-title");
+    const expensesWrap = document.getElementById("expenses-wrap");
+
+    const forecastForm = document.getElementById("forecast-form");
+    const forecastPersonSelect = document.getElementById("forecast-person-select");
+    const forecastPersonNewField = document.getElementById("forecast-person-new-field");
+    const forecastPersonNewInput = document.getElementById("forecast-person-new");
+    const forecastDateModeSelect = document.getElementById("forecast-date-mode");
+    const forecastDateManualField = document.getElementById("forecast-date-manual-field");
+    const forecastDateFrequencyField = document.getElementById("forecast-date-frequency-field");
+    const forecastDateSelect = document.getElementById("forecast-date-select");
+    const forecastAccountSelect = document.getElementById("forecast-account");
+    const forecastStatusEl = document.getElementById("forecast-status");
+    const forecastWrap = document.getElementById("forecast-wrap");
+    const saveForecastBtn = document.getElementById("save-forecast-btn");
+    const cancelForecastEditBtn = document.getElementById("cancel-forecast-edit-btn");
+
+    let editingForecastId = null;
+
+    function loadBanks() {
+      try { return JSON.parse(localStorage.getItem(bankStorageKey)) || []; } catch { return []; }
+    }
+
+    function loadExpenses() {
+      try { return JSON.parse(localStorage.getItem(expenseStorageKey)) || []; } catch { return []; }
+    }
+
+    function loadForecasts() {
+      try { return JSON.parse(localStorage.getItem(forecastStorageKey)) || []; } catch { return []; }
+    }
+
+    function loadPeople() {
+      try { return JSON.parse(localStorage.getItem(peopleStorageKey)) || []; } catch { return []; }
+    }
+
+    function loadIncomeProfiles() {
+      try { return JSON.parse(localStorage.getItem(incomeStorageKey)) || []; } catch { return []; }
+    }
+
+    function savePeople(items) {
+      localStorage.setItem(peopleStorageKey, JSON.stringify(items));
+    }
+
+    function saveForecasts(items) {
+      localStorage.setItem(forecastStorageKey, JSON.stringify(items));
+    }
+
+    function normalizeName(value) {
+      return String(value || "").trim();
+    }
+
+    function getPersonNameFromValue(value) {
+      if (!value) return "";
+      if (typeof value === "string") return normalizeName(value);
+      if (typeof value === "object") return normalizeName(value.personName || value.name || value.person || "");
+      return "";
+    }
+
+    function getSourcePersonName(source) {
+      return normalizeName(source.personName || source.person || source.name || "");
+    }
+
+    function normalizeFrequency(frequency) {
+      const raw = normalizeName(frequency).toLowerCase();
+      if (raw === "weekly" || raw === "every week") return "weekly";
+      if (raw === "biweekly" || raw === "every 2 weeks" || raw === "every two weeks" || raw === "2 weeks") return "biweekly";
+      if (raw === "semimonthly" || raw === "twice per month" || raw === "semi-monthly") return "semimonthly";
+      return "monthly";
+    }
+
+    function getIncomeSourceName(source) {
+      return normalizeName(source.jobName || source.incomeSource || source.sourceName || "Source");
+    }
+
+    function getSourceAnchorDate(source, monthValue) {
+      const fromSource = normalizeName(source.nextPayDate || source.payDate || source.paydayDate || source.date || "");
+      const parsed = fromSource ? new Date(`${fromSource}T00:00:00`) : null;
+      if (parsed && !Number.isNaN(parsed.getTime())) return parsed;
+      return new Date(`${monthValue}-01T00:00:00`);
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+    }
+
+    function monthLabel(value) {
+      if (!value) return "All Months";
+      const [y, m] = value.split("-");
+      const d = new Date(Number(y), Number(m) - 1, 1);
+      return d.toLocaleString("en-US", { month: "long", year: "numeric" });
+    }
+
+    function dateLabel(value) {
+      if (!value) return "-";
+      const d = new Date(`${value}T00:00:00`);
+      if (Number.isNaN(d.getTime())) return "-";
+      return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    }
+
+    function paymentMethodLabel(method) {
+      if (method === "debit-card") return "Debit Card";
+      if (method === "credit-card") return "Credit Card";
+      if (method === "bank-transfer") return "Bank Transfer";
+      if (method === "check") return "Check";
+      if (method === "other") return "Other";
+      return "Cash";
+    }
+
+    function accountTypeLabel(type) {
+      if (type === "checking") return "Checking";
+      if (type === "savings") return "Savings";
+      if (type === "business-checking") return "Business Checking";
+      if (type === "business-savings") return "Business Savings";
+      if (type === "prepaid") return "Prepaid";
+      if (type === "other") return "Other";
+      return "-";
+    }
+
+    function addMonthsClamped(date, monthsToAdd) {
+      const y = date.getFullYear();
+      const m = date.getMonth();
+      const d = date.getDate();
+      const targetFirst = new Date(y, m + monthsToAdd, 1);
+      const lastDay = new Date(targetFirst.getFullYear(), targetFirst.getMonth() + 1, 0).getDate();
+      return new Date(targetFirst.getFullYear(), targetFirst.getMonth(), Math.min(d, lastDay));
+    }
+
+    function addPeriod(date, frequency) {
+      const next = new Date(date.getTime());
+      if (frequency === "weekly") {
+        next.setDate(next.getDate() + 7);
+        return next;
+      }
+      if (frequency === "biweekly") {
+        next.setDate(next.getDate() + 14);
+        return next;
+      }
+      if (frequency === "semimonthly") {
+        next.setDate(next.getDate() + 15);
+        return next;
+      }
+      return addMonthsClamped(next, 1);
+    }
+
+    function refreshFrequencyDateOptions() {
+      const mode = forecastDateModeSelect.value;
+      forecastDateManualField.classList.toggle("hidden", mode !== "manual");
+      forecastDateFrequencyField.classList.toggle("hidden", mode !== "frequency");
+      document.getElementById("forecast-date").required = mode === "manual";
+      forecastDateSelect.required = mode === "frequency";
+
+      if (mode !== "frequency") return;
+
+      const person = forecastPersonSelect.value === "__new__"
+        ? normalizeName(forecastPersonNewInput.value)
+        : normalizeName(forecastPersonSelect.value);
+      const monthValue = filterMonthInput.value;
+      const personKey = person.toLowerCase();
+      const income = loadIncomeProfiles().filter(x => getSourcePersonName(x).toLowerCase() === personKey);
+
+      const options = [];
+      const seenOptionValues = new Set();
+      const [y, m] = monthValue.split("-").map(Number);
+      const monthStart = new Date(y, m - 1, 1);
+      const monthEnd = new Date(y, m, 0);
+
+      for (const source of income) {
+        const frequency = normalizeFrequency(source.frequency);
+        let cursor = getSourceAnchorDate(source, monthValue);
+        if (Number.isNaN(cursor.getTime())) continue;
+
+        let guard = 0;
+        while (cursor < monthStart && guard < 500) {
+          cursor = addPeriod(cursor, frequency);
+          guard += 1;
+        }
+
+        while (cursor <= monthEnd && guard < 1000) {
+          const iso = cursor.toISOString().slice(0, 10);
+          const sourceId = String(source.id || getIncomeSourceName(source));
+          const optionValue = `${iso}|${sourceId}`;
+          if (seenOptionValues.has(optionValue)) {
+            cursor = addPeriod(cursor, frequency);
+            guard += 1;
+            continue;
+          }
+          seenOptionValues.add(optionValue);
+
+          options.push({
+            value: optionValue,
+            date: iso,
+            sourceName: getIncomeSourceName(source),
+            amount: Number(source.amount) || 0
+          });
+          cursor = addPeriod(cursor, frequency);
+          guard += 1;
+        }
+      }
+
+      options.sort((a, b) => a.date.localeCompare(b.date));
+
+      if (!options.length) {
+        forecastDateSelect.innerHTML = '<option value="">No paychecks found in this month</option>';
+        forecastDateSelect.value = "";
+        return;
+      }
+
+      forecastDateSelect.innerHTML = options
+        .map((o, idx) => `<option value="${o.value}">Paycheck ${idx + 1}: ${dateLabel(o.date)} - ${o.sourceName} (${formatCurrency(o.amount)})</option>`)
+        .join("");
+
+      if (!forecastDateSelect.value || !options.some(o => o.value === forecastDateSelect.value)) {
+        forecastDateSelect.value = options[0].value;
+      }
+    }
+
+    function toggleForecastNewPersonField() {
+      const isNew = forecastPersonSelect.value === "__new__";
+      forecastPersonNewField.classList.toggle("hidden", !isNew);
+      forecastPersonNewInput.required = isNew;
+      if (!isNew) forecastPersonNewInput.value = "";
+    }
+
+    function populateForecastPeopleSelect(preferredName) {
+      const people = loadPeople().map(getPersonNameFromValue).filter(Boolean);
+      const forecasts = loadForecasts();
+      const fromForecasts = forecasts.map(x => normalizeName(x.person)).filter(Boolean);
+      const fromIncome = loadIncomeProfiles().map(getSourcePersonName).filter(Boolean);
+      const unique = [...new Set([...people, ...fromIncome, ...fromForecasts])];
+
+      const current = forecastPersonSelect.value;
+      const selected = preferredName || current;
+      const options = ['<option value="__new__">+ Add New Person</option>']
+        .concat(unique.map(name => `<option value="${name.replace(/"/g, "&quot;")}">${name}</option>`));
+      forecastPersonSelect.innerHTML = options.join("");
+
+      if (selected && unique.includes(selected)) forecastPersonSelect.value = selected;
+      else if (selected === "__new__") forecastPersonSelect.value = "__new__";
+      else if (unique.length) forecastPersonSelect.value = unique[0];
+      else forecastPersonSelect.value = "__new__";
+
+      toggleForecastNewPersonField();
+    }
+
+    function populateForecastAccountSelect(preferredId) {
+      const banks = loadBanks();
+      const current = forecastAccountSelect.value;
+      const selected = preferredId || current;
+      const options = ['<option value="">Select account...</option>']
+        .concat(banks.map(b => `<option value="${b.id}">${b.accountAlias || "Account"} - ${b.bankName}</option>`));
+      forecastAccountSelect.innerHTML = options.join("");
+
+      if (selected && banks.some(b => b.id === selected)) forecastAccountSelect.value = selected;
+      else forecastAccountSelect.value = "";
+    }
+
+    function setForecastEditMode(isEdit) {
+      saveForecastBtn.textContent = isEdit ? "Update Forecasted Payday" : "Save Forecasted Payday";
+      cancelForecastEditBtn.classList.toggle("hidden", !isEdit);
+    }
+
+    function resetForecastForm() {
+      editingForecastId = null;
+      forecastForm.reset();
+      document.getElementById("forecast-date").value = new Date().toISOString().slice(0, 10);
+      populateForecastPeopleSelect("__new__");
+      populateForecastAccountSelect("");
+      forecastDateModeSelect.value = "manual";
+      refreshFrequencyDateOptions();
+      setForecastEditMode(false);
+    }
+
+    function startForecastEdit(id) {
+      const item = loadForecasts().find(x => x.id === id);
+      if (!item) return;
+      editingForecastId = id;
+      populateForecastPeopleSelect(item.person || "");
+      document.getElementById("forecast-date").value = item.payDate || "";
+      document.getElementById("forecast-amount").value = String(item.amount ?? "");
+      populateForecastAccountSelect(item.accountId || "");
+      forecastDateModeSelect.value = "manual";
+      refreshFrequencyDateOptions();
+      setForecastEditMode(true);
+    }
+
+    function renderForecastTable(forecasts, banksById, filterMonth) {
+      if (!forecasts.length) {
+        forecastWrap.innerHTML = "<p class='empty'>No forecasted paychecks for this month yet.</p>";
+        return;
+      }
+
+      const rows = [...forecasts]
+        .sort((a, b) => String(a.payDate || "").localeCompare(String(b.payDate || "")))
+        .map(f => {
+          const bank = banksById.get(f.accountId || "");
+          return `
+            <tr>
+              <td>${f.person || "-"}</td>
+              <td>${dateLabel(f.payDate)}</td>
+              <td>${f.sourceName || "Manual / Custom"}</td>
+              <td>${bank ? `${bank.accountAlias || "Account"} - ${bank.bankName}` : "-"}</td>
+              <td>${formatCurrency(Number(f.amount) || 0)}</td>
+              <td class="actions">
+                <button type="button" data-forecast-id="${f.id}" data-action="edit">Edit</button>
+                <button type="button" data-forecast-id="${f.id}" data-action="delete">Delete</button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+
+      forecastWrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Person</th>
+              <th>Payday</th>
+              <th>Paycheck Chosen</th>
+              <th>Deposit Account</th>
+              <th>Forecasted Amount</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function render() {
+      const filterMonth = filterMonthInput.value;
+      populateForecastPeopleSelect(forecastPersonSelect.value);
+      refreshFrequencyDateOptions();
+      const banks = loadBanks();
+      const banksById = new Map(banks.map(b => [b.id, b]));
+      const expensesAll = loadExpenses();
+      const forecastsAll = loadForecasts();
+
+      const expenses = filterMonth ? expensesAll.filter(x => x.month === filterMonth) : expensesAll;
+      const forecasts = forecastsAll.filter(x => (x.payDate || "").slice(0, 7) === filterMonth);
+
+      const totalBalance = banks.reduce((sum, b) => sum + (Number(b.bankBalance) || 0), 0);
+      const totalExpenses = expenses.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+      const availableAfterExpenses = totalBalance - totalExpenses;
+      const totalForecast = forecasts.reduce((sum, f) => sum + (Number(f.amount) || 0), 0);
+      const projectedWithForecast = availableAfterExpenses + totalForecast;
+
+      totalBalanceEl.textContent = formatCurrency(totalBalance);
+      monthExpensesEl.textContent = formatCurrency(totalExpenses);
+      afterExpensesEl.textContent = formatCurrency(availableAfterExpenses);
+      forecastTotalEl.textContent = formatCurrency(totalForecast);
+      projectedTotalEl.textContent = formatCurrency(projectedWithForecast);
+
+      accountsTitleEl.textContent = `Applying ${monthLabel(filterMonth)} expenses and forecasted paydays to account balances.`;
+      expensesTitleEl.textContent = `Expenses counted from ${monthLabel(filterMonth)}.`;
+      forecastStatusEl.textContent = forecasts.length
+        ? `${forecasts.length} forecasted payday entry(s) for ${monthLabel(filterMonth)}. Added as projected funds.`
+        : `No forecasted paychecks for ${monthLabel(filterMonth)} yet.`;
+
+      renderForecastTable(forecasts, banksById, filterMonth);
+
+      if (!banks.length) {
+        accountsWrap.innerHTML = "<p class='empty'>No bank accounts saved yet.</p>";
+      } else {
+        const rows = banks.map(b => {
+          const balance = Number(b.bankBalance) || 0;
+          const ratio = totalBalance > 0 ? balance / totalBalance : 0;
+          const allocatedExpense = totalExpenses * ratio;
+          const adjustedAfterExpense = balance - allocatedExpense;
+          const forecastForBank = forecasts
+            .filter(f => f.accountId === b.id)
+            .reduce((sum, f) => sum + (Number(f.amount) || 0), 0);
+          const projectedBankBalance = adjustedAfterExpense + forecastForBank;
+
+          return `
+            <tr>
+              <td>${b.bankName || "-"}</td>
+              <td>${accountTypeLabel(b.accountType)}</td>
+              <td>${b.accountAlias || "-"}</td>
+              <td>${formatCurrency(balance)}</td>
+              <td>${formatCurrency(allocatedExpense)}</td>
+              <td>${formatCurrency(adjustedAfterExpense)}</td>
+              <td>${formatCurrency(forecastForBank)}</td>
+              <td>${formatCurrency(projectedBankBalance)}</td>
+            </tr>
+          `;
+        }).join("");
+
+        accountsWrap.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Bank</th>
+                <th>Account Type</th>
+                <th>Account Nickname / Last 4</th>
+                <th>Current Balance</th>
+                <th>Expense Share Applied</th>
+                <th>After Expenses</th>
+                <th>Forecasted Added</th>
+                <th>Projected Balance</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      }
+
+      if (!expenses.length) {
+        expensesWrap.innerHTML = "<p class='empty'>No expenses found for this month.</p>";
+      } else {
+        const rows = expenses
+          .sort((a, b) => String(a.chargeDate || "").localeCompare(String(b.chargeDate || "")))
+          .map(e => `
+            <tr>
+              <td>${dateLabel(e.chargeDate)}</td>
+              <td>${e.name || "-"}</td>
+              <td>${e.category || "-"}</td>
+              <td>${paymentMethodLabel(e.payMethod)}</td>
+              <td>${formatCurrency(Number(e.amount) || 0)}</td>
+            </tr>
+          `).join("");
+
+        expensesWrap.innerHTML = `
+          <table>
+            <thead>
+              <tr>
+                <th>Charge Date</th>
+                <th>Expense</th>
+                <th>Category</th>
+                <th>Payment Method</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        `;
+      }
+    }
+
+    forecastForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const data = new FormData(forecastForm);
+      let person = String(data.get("forecast-person-select") || "").trim();
+      if (person === "__new__") {
+        person = String(data.get("forecast-person-new") || "").trim();
+      }
+
+      const dateMode = String(data.get("forecast-date-mode") || "manual");
+      const chosenRaw = dateMode === "frequency"
+        ? String(data.get("forecast-date-select") || "")
+        : String(data.get("forecast-date") || "");
+      const [chosenPayDate, sourceId] = chosenRaw.split("|");
+      const source = loadIncomeProfiles().find(x => String(x.id || "") === String(sourceId || ""));
+
+      const entry = {
+        id: editingForecastId || crypto.randomUUID(),
+        person,
+        payDate: chosenPayDate,
+        accountId: String(data.get("forecast-account") || ""),
+        amount: Number(data.get("forecast-amount")),
+        sourceId: String(sourceId || ""),
+        sourceName: source ? String(source.jobName || "Source") : ""
+      };
+
+      if (!entry.person || !entry.payDate || !entry.accountId || !(entry.amount >= 0)) return;
+
+      const people = loadPeople();
+      if (!people.includes(entry.person)) {
+        people.push(entry.person);
+        savePeople(people);
+      }
+
+      const all = loadForecasts().filter(x => x.id !== entry.id);
+      all.push(entry);
+      saveForecasts(all);
+
+      resetForecastForm();
+      render();
+    });
+
+    forecastWrap.addEventListener("click", event => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) return;
+
+      const id = target.dataset.forecastId;
+      const action = target.dataset.action;
+      if (!id || !action) return;
+
+      if (action === "edit") {
+        startForecastEdit(id);
+        return;
+      }
+
+      if (action === "delete") {
+        const next = loadForecasts().filter(x => x.id !== id);
+        saveForecasts(next);
+        if (editingForecastId === id) resetForecastForm();
+        render();
+      }
+    });
+
+    cancelForecastEditBtn.addEventListener("click", () => {
+      resetForecastForm();
+    });
+
+    forecastPersonSelect.addEventListener("change", () => {
+      toggleForecastNewPersonField();
+      refreshFrequencyDateOptions();
+    });
+    forecastPersonNewInput.addEventListener("input", refreshFrequencyDateOptions);
+    forecastDateModeSelect.addEventListener("change", refreshFrequencyDateOptions);
+    filterMonthInput.addEventListener("change", () => {
+      refreshFrequencyDateOptions();
+      render();
+    });
+
+    const thisMonth = new Date().toISOString().slice(0, 7);
+    filterMonthInput.value = thisMonth;
+    document.getElementById("forecast-date").value = new Date().toISOString().slice(0, 10);
+    populateForecastPeopleSelect("");
+    populateForecastAccountSelect("");
+    refreshFrequencyDateOptions();
+    setForecastEditMode(false);
+    render();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

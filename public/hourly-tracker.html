@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAM LOGISTICS SOLUTIONS | Personal Hourly Income Tracker</title>
+  <style>
+    :root {
+      --bg: #f6f4ef;
+      --panel: #fffdf8;
+      --ink: #1f2022;
+      --accent: #0a6a4c;
+      --accent-soft: #def4ea;
+      --warm-soft: #fff5e6;
+      --warm-border: #e6c99f;
+      --danger: #b42318;
+      --border: #d8d2c6;
+      --muted: #65707a;
+      --shadow: 0 10px 28px rgba(0, 0, 0, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 8%, #e9f4ef 0%, transparent 38%),
+        radial-gradient(circle at 88% 86%, #f5ecd9 0%, transparent 35%),
+        var(--bg);
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .app {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      gap: 20px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: 1.8rem;
+    }
+
+    .sub {
+      margin: 0;
+      color: var(--muted);
+    }
+    .brand-kicker {
+      display: inline-block;
+      margin-bottom: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      border: 1px solid #b9d9cb;
+      background: #eef9f3;
+      color: #0f5f46;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .model-pill {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid #dfcfaf;
+      background: #fff4e2;
+      color: #755019;
+      font-size: 0.74rem;
+      font-weight: 700;
+      vertical-align: middle;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .personal-note {
+      border: 1px dashed #cebfa2;
+      background: #fff9ef;
+    }
+
+    .personal-note h2 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      color: #5f4218;
+    }
+
+    .page-nav {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .page-link {
+      display: inline-block;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: #fff;
+      color: #1c5e48;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      width: auto;
+    }
+
+    .page-link-danger {
+      margin-left: auto;
+      color: #8d1f1b;
+      border-color: #e2b3af;
+      background: #fff5f5;
+    }
+    .reset-control {
+      margin-top: 8px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+    }
+
+
+    .reset-confirm {
+      margin-top: 6px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .reset-confirm.hidden {
+      display: none;
+    }
+
+    .reset-confirm label {
+      font-size: 0.88rem;
+      color: #6b4a45;
+      font-weight: 600;
+    }
+
+    .reset-confirm input {
+      max-width: 170px;
+      width: auto;
+    }
+
+    .reset-confirm button {
+      width: auto;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #fff;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .reset-confirm button[data-reset-confirm-btn] {
+      color: #8d1f1b;
+      border-color: #e2b3af;
+    }
+
+    .reset-confirm button[data-reset-confirm-btn]:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .tracker-block {
+      margin-top: 16px;
+      border: 1px solid var(--warm-border);
+      border-left: 6px solid #bd7b18;
+      border-radius: 14px;
+      padding: 14px;
+      background: var(--warm-soft);
+    }
+
+    .tracker-title {
+      margin: 0 0 4px;
+      font-size: 1.08rem;
+    }
+
+    .row {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      align-items: end;
+    }
+
+    .field {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    label {
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    input,
+    select,
+    button {
+      width: 100%;
+      font: inherit;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      background: #fff;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .card {
+      background: var(--accent-soft);
+      border: 1px solid #c7e8d9;
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 0.86rem;
+      color: #1c5a45;
+    }
+
+    .card p {
+      margin: 8px 0 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .actions button {
+      background: #fff;
+      color: var(--danger);
+      border: 1px solid #efc0be;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+    }
+
+    .empty {
+      color: var(--muted);
+      margin-top: 12px;
+    }
+
+    @media (max-width: 860px) {
+      body { padding: 14px; }
+      .summary { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .summary { grid-template-columns: 1fr; }
+    }
+  </style>
+  <script src="storage-sync.js"></script>
+  <script src="reset-control.js"></script>
+  <script src="month-year-picker.js"></script>
+  <script src="nav-active.js"></script>
+</head>
+<body>
+  <main class="app">
+    <section class="panel">
+      <div class="brand-kicker">Powered by RAM LOGISTICS SOLUTIONS</div>
+      <h1>Hourly Income Tracker <span class="model-pill">Personal Model</span></h1>
+      <p class="sub">Compare gross vs net by activity and see earnings per hour after expenses.</p>
+      <div class="page-nav">
+        <a class="page-link" href="index.html">Money Command Center</a>
+        <a class="page-link" href="hourly-tracker.html">Hourly Income Tracker</a>
+        <a class="page-link" href="banking-overview.html">Banking Overview</a>
+        <a class="page-link" href="goals-budget.html">Goals Planner</a>
+        <a class="page-link" href="charts-dashboard.html">Money Map Charts</a>
+        <button class="page-link page-link-danger" type="button" data-reset-all>Reset All Data</button>
+      </div>
+      <div class="reset-control" data-reset-control>
+        <div class="reset-confirm hidden" data-reset-confirm-wrap>
+          <label>Type <strong>RESET</strong> to confirm:</label>
+          <input type="text" data-reset-input placeholder="RESET" autocomplete="off">
+          <button type="button" data-reset-confirm-btn disabled>Confirm Reset</button>
+          <button type="button" data-reset-cancel-btn>Cancel</button>
+        </div>
+      </div>
+<section class="tracker-block">
+        <h2 class="tracker-title">Activity Entry</h2>
+        <p class="sub">This page shows the numbers only. You decide if the activity is worth your time.</p>
+
+        <form id="activity-form">
+          <div class="row">
+            <div class="field">
+              <label for="month">Month</label>
+              <input id="month" name="month" type="month" required>
+            </div>
+            <div class="field">
+              <label for="person">Person</label>
+              <input id="person" name="person" type="text" placeholder="Ex: Alex" required>
+            </div>
+            <div class="field">
+              <label for="activity">Activity / Job</label>
+              <input id="activity" name="activity" type="text" placeholder="Main Job, Uber, Side Work..." required>
+            </div>
+            <div class="field">
+              <label for="hours">Hours Worked</label>
+              <input id="hours" name="hours" type="number" min="0.01" step="0.01" required>
+            </div>
+            <div class="field">
+              <label for="gross">Gross Earnings ($)</label>
+              <input id="gross" name="gross" type="number" min="0" step="0.01" required>
+            </div>
+            <div class="field">
+              <label for="expenses">Activity Expenses ($)</label>
+              <input id="expenses" name="expenses" type="number" min="0" step="0.01" value="0" required>
+            </div>
+            <div class="field">
+              <label for="tax-rate">Estimated Tax % (optional)</label>
+              <input id="tax-rate" name="tax-rate" type="number" min="0" max="100" step="0.01" value="0">
+            </div>
+            <div class="field">
+              <label for="filter-month">Track Month</label>
+              <input id="filter-month" type="month">
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button type="submit">Add Activity</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="tracker-block">
+        <h2 class="tracker-title">Expense List (Day / Week / Month)</h2>
+        <p class="sub">Add recurring expenses and apply them to the selected month.</p>
+
+        <form id="expense-list-form">
+          <div class="row">
+            <div class="field">
+              <label for="expense-month">Expense Month</label>
+              <input id="expense-month" name="expense-month" type="month" required>
+            </div>
+            <div class="field">
+              <label for="expense-name">Expense Name</label>
+              <input id="expense-name" name="expense-name" type="text" placeholder="Gas, Childcare, Subscriptions..." required>
+            </div>
+            <div class="field">
+              <label for="expense-amount">Amount ($)</label>
+              <input id="expense-amount" name="expense-amount" type="number" min="0" step="0.01" required>
+            </div>
+            <div class="field">
+              <label for="expense-cadence">Apply Every</label>
+              <select id="expense-cadence" name="expense-cadence">
+                <option value="day">Day</option>
+                <option value="week">Week</option>
+                <option value="month">Month</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="expense-note">Note (optional)</label>
+              <input id="expense-note" name="expense-note" type="text" placeholder="Any details...">
+            </div>
+            <div class="field">
+              <label>&nbsp;</label>
+              <button type="submit">Add Expense</button>
+            </div>
+          </div>
+        </form>
+
+        <div id="expense-list-wrap"></div>
+      </section>
+
+      <div class="summary">
+        <div class="card">
+          <h3>Total Gross</h3>
+          <p id="total-gross">$0.00</p>
+        </div>
+        <div class="card">
+          <h3>Total Net (After Expenses)</h3>
+          <p id="total-net">$0.00</p>
+        </div>
+        <div class="card">
+          <h3>Avg Gross / Hour</h3>
+          <p id="avg-gross-hour">$0.00</p>
+        </div>
+        <div class="card">
+          <h3>Avg Net / Hour</h3>
+          <p id="avg-net-hour">$0.00</p>
+        </div>
+        <div class="card">
+          <h3>Total Expenses Applied</h3>
+          <p id="total-expenses-applied">$0.00</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2 style="margin:0;">Hourly Breakdown</h2>
+      <p class="sub" id="table-title">Showing all activity entries.</p>
+      <div id="table-wrap"></div>
+    </section>
+  
+    <section class="panel personal-note">
+      <h2>Personal Model Notice</h2>
+      <p class="sub">This RAM LOGISTICS SOLUTIONS tool is the personal budgeting model. The business-focused model is in development and will be released soon.</p>
+    </section>
+  </main>
+
+  <script>
+    const storageKey = "budget_tool_hourly_tracker_v1";
+    const expenseListStorageKey = "budget_tool_hourly_expense_list_v1";
+
+    const form = document.getElementById("activity-form");
+    const expenseListForm = document.getElementById("expense-list-form");
+    const monthInput = document.getElementById("month");
+    const expenseMonthInput = document.getElementById("expense-month");
+    const filterMonthInput = document.getElementById("filter-month");
+    const tableWrap = document.getElementById("table-wrap");
+    const expenseListWrap = document.getElementById("expense-list-wrap");
+    const tableTitleEl = document.getElementById("table-title");
+
+    const totalGrossEl = document.getElementById("total-gross");
+    const totalNetEl = document.getElementById("total-net");
+    const avgGrossHourEl = document.getElementById("avg-gross-hour");
+    const avgNetHourEl = document.getElementById("avg-net-hour");
+    const totalExpensesAppliedEl = document.getElementById("total-expenses-applied");
+
+    function loadItems() {
+      try {
+        return JSON.parse(localStorage.getItem(storageKey)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveItems(items) {
+      localStorage.setItem(storageKey, JSON.stringify(items));
+    }
+
+    function loadExpenseList() {
+      try {
+        return JSON.parse(localStorage.getItem(expenseListStorageKey)) || [];
+      } catch {
+        return [];
+      }
+    }
+
+    function saveExpenseList(items) {
+      localStorage.setItem(expenseListStorageKey, JSON.stringify(items));
+    }
+
+    function formatCurrency(value) {
+      return new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(value);
+    }
+
+    function monthLabel(value) {
+      if (!value) return "All Months";
+      const [y, m] = value.split("-");
+      const d = new Date(Number(y), Number(m) - 1, 1);
+      return d.toLocaleString("en-US", { month: "long", year: "numeric" });
+    }
+
+    function daysInMonth(monthValue) {
+      if (!monthValue) return 30;
+      const [y, m] = monthValue.split("-").map(Number);
+      return new Date(y, m, 0).getDate();
+    }
+
+    function cadenceLabel(cadence) {
+      if (cadence === "day") return "Day";
+      if (cadence === "week") return "Week";
+      return "Month";
+    }
+
+    function monthlyExpenseAmount(entry, monthValue) {
+      const amount = Number(entry.amount) || 0;
+      if (entry.cadence === "day") return amount * daysInMonth(monthValue);
+      if (entry.cadence === "week") return amount * (daysInMonth(monthValue) / 7);
+      return amount;
+    }
+
+    function calc(entry, sharedAllocated) {
+      const gross = Number(entry.gross) || 0;
+      const activityExpenses = Number(entry.expenses) || 0;
+      const sharedExpenses = Number(sharedAllocated) || 0;
+      const totalExpenses = activityExpenses + sharedExpenses;
+      const hours = Number(entry.hours) || 0;
+      const taxRate = Number(entry.taxRate) || 0;
+
+      const netAfterExpenses = gross - totalExpenses;
+      const estTaxes = netAfterExpenses * (taxRate / 100);
+      const netAfterTax = netAfterExpenses - estTaxes;
+
+      return {
+        gross,
+        activityExpenses,
+        sharedExpenses,
+        totalExpenses,
+        hours,
+        taxRate,
+        netAfterExpenses,
+        estTaxes,
+        netAfterTax,
+        grossPerHour: hours > 0 ? gross / hours : 0,
+        netPerHour: hours > 0 ? netAfterTax / hours : 0
+      };
+    }
+
+    function renderExpenseList(filterMonth) {
+      const rows = loadExpenseList().filter(x => x.month === filterMonth);
+      if (!rows.length) {
+        expenseListWrap.innerHTML = "<p class='empty'>No recurring expenses for this month yet.</p>";
+        return;
+      }
+
+      const html = rows.map(item => {
+        const monthly = monthlyExpenseAmount(item, filterMonth);
+        return `
+          <tr>
+            <td>${item.name}</td>
+            <td>${cadenceLabel(item.cadence)}</td>
+            <td>${formatCurrency(Number(item.amount) || 0)}</td>
+            <td>${formatCurrency(monthly)}</td>
+            <td>${item.note || "-"}</td>
+            <td class="actions"><button type="button" data-expense-id="${item.id}">Delete</button></td>
+          </tr>
+        `;
+      }).join("");
+
+      expenseListWrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Expense</th>
+              <th>Apply Every</th>
+              <th>Amount</th>
+              <th>Monthly Applied</th>
+              <th>Note</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>${html}</tbody>
+        </table>
+      `;
+    }
+
+    function render() {
+      const all = loadItems();
+      const filterMonth = filterMonthInput.value;
+      const rows = filterMonth ? all.filter(x => x.month === filterMonth) : all;
+
+      const recurring = loadExpenseList().filter(x => x.month === filterMonth);
+      const recurringTotal = recurring.reduce((sum, item) => sum + monthlyExpenseAmount(item, filterMonth), 0);
+
+      const totalHours = rows.reduce((sum, row) => sum + (Number(row.hours) || 0), 0);
+
+      const totals = rows.reduce((acc, row) => {
+        const rowHours = Number(row.hours) || 0;
+        const sharedAllocated = totalHours > 0 ? (recurringTotal * (rowHours / totalHours)) : 0;
+        const c = calc(row, sharedAllocated);
+        acc.gross += c.gross;
+        acc.net += c.netAfterTax;
+        acc.hours += c.hours;
+        acc.expenses += c.totalExpenses;
+        return acc;
+      }, { gross: 0, net: 0, hours: 0, expenses: 0 });
+
+      totalGrossEl.textContent = formatCurrency(totals.gross);
+      totalNetEl.textContent = formatCurrency(totals.net);
+      totalExpensesAppliedEl.textContent = formatCurrency(totals.expenses);
+      avgGrossHourEl.textContent = formatCurrency(totals.hours > 0 ? totals.gross / totals.hours : 0);
+      avgNetHourEl.textContent = formatCurrency(totals.hours > 0 ? totals.net / totals.hours : 0);
+
+      tableTitleEl.textContent = filterMonth
+        ? `Tracking ${monthLabel(filterMonth)} activities.`
+        : "Showing all activity entries.";
+
+      renderExpenseList(filterMonth);
+
+      if (!rows.length) {
+        tableWrap.innerHTML = "<p class='empty'>No activity entries for this view yet.</p>";
+        return;
+      }
+
+      const ordered = [...rows].sort((a, b) => (a.month < b.month ? 1 : -1));
+      const body = ordered.map(item => {
+        const rowHours = Number(item.hours) || 0;
+        const sharedAllocated = totalHours > 0 ? (recurringTotal * (rowHours / totalHours)) : 0;
+        const c = calc(item, sharedAllocated);
+        return `
+          <tr>
+            <td>${monthLabel(item.month)}</td>
+            <td>${item.person}</td>
+            <td>${item.activity}</td>
+            <td>${c.hours.toFixed(2)}</td>
+            <td>${formatCurrency(c.gross)}</td>
+            <td>${formatCurrency(c.activityExpenses)}</td>
+            <td>${formatCurrency(c.sharedExpenses)}</td>
+            <td>${formatCurrency(c.totalExpenses)}</td>
+            <td>${formatCurrency(c.netAfterExpenses)}</td>
+            <td>${c.taxRate.toFixed(2)}%</td>
+            <td>${formatCurrency(c.netAfterTax)}</td>
+            <td>${formatCurrency(c.grossPerHour)}</td>
+            <td>${formatCurrency(c.netPerHour)}</td>
+            <td class="actions"><button type="button" data-id="${item.id}">Delete</button></td>
+          </tr>
+        `;
+      }).join("");
+
+      tableWrap.innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Person</th>
+              <th>Activity</th>
+              <th>Hours</th>
+              <th>Gross</th>
+              <th>Activity Expenses</th>
+              <th>Recurring Allocated</th>
+              <th>Total Expenses</th>
+              <th>Net (Before Tax)</th>
+              <th>Tax %</th>
+              <th>Net (After Tax)</th>
+              <th>Gross / Hr</th>
+              <th>Net / Hr</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>${body}</tbody>
+        </table>
+      `;
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const data = new FormData(form);
+      const entry = {
+        id: crypto.randomUUID(),
+        month: String(data.get("month") || ""),
+        person: String(data.get("person") || "").trim(),
+        activity: String(data.get("activity") || "").trim(),
+        hours: Number(data.get("hours")),
+        gross: Number(data.get("gross")),
+        expenses: Number(data.get("expenses")),
+        taxRate: Number(data.get("tax-rate") || 0)
+      };
+
+      if (!entry.month || !entry.person || !entry.activity) return;
+      if (!(entry.hours > 0) || !(entry.gross >= 0) || !(entry.expenses >= 0) || !(entry.taxRate >= 0)) return;
+
+      const all = loadItems();
+      all.push(entry);
+      saveItems(all);
+
+      form.reset();
+      monthInput.value = filterMonthInput.value || new Date().toISOString().slice(0, 7);
+      document.getElementById("expenses").value = "0";
+      document.getElementById("tax-rate").value = "0";
+      render();
+    });
+
+    expenseListForm.addEventListener("submit", event => {
+      event.preventDefault();
+      const data = new FormData(expenseListForm);
+      const entry = {
+        id: crypto.randomUUID(),
+        month: String(data.get("expense-month") || ""),
+        name: String(data.get("expense-name") || "").trim(),
+        amount: Number(data.get("expense-amount")),
+        cadence: String(data.get("expense-cadence") || "month"),
+        note: String(data.get("expense-note") || "").trim()
+      };
+
+      if (!entry.month || !entry.name || !(entry.amount >= 0)) return;
+      if (!["day", "week", "month"].includes(entry.cadence)) return;
+
+      const all = loadExpenseList();
+      all.push(entry);
+      saveExpenseList(all);
+
+      expenseListForm.reset();
+      expenseMonthInput.value = filterMonthInput.value || new Date().toISOString().slice(0, 7);
+      document.getElementById("expense-cadence").value = "day";
+      render();
+    });
+
+    tableWrap.addEventListener("click", event => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) return;
+      const id = target.dataset.id;
+      if (!id) return;
+
+      const next = loadItems().filter(x => x.id !== id);
+      saveItems(next);
+      render();
+    });
+
+    expenseListWrap.addEventListener("click", event => {
+      const target = event.target;
+      if (!(target instanceof HTMLButtonElement)) return;
+      const id = target.dataset.expenseId;
+      if (!id) return;
+
+      const next = loadExpenseList().filter(x => x.id !== id);
+      saveExpenseList(next);
+      render();
+    });
+
+    filterMonthInput.addEventListener("change", () => {
+      expenseMonthInput.value = filterMonthInput.value;
+      monthInput.value = filterMonthInput.value;
+      render();
+    });
+
+    const thisMonth = new Date().toISOString().slice(0, 7);
+    monthInput.value = thisMonth;
+    expenseMonthInput.value = thisMonth;
+    filterMonthInput.value = thisMonth;
+    render();
+  </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
